@@ -19,7 +19,7 @@ export default function Watch() {
   const [season, setSeason] = useState(1);
   const [episode, setEpisode] = useState(1);
   const [maxEpisodes, setMaxEpisodes] = useState(1);
-  const [data, setData] = useState<Movie | Tv>();
+  const [data, setData] = useState<Movie | Series>();
 
   function addViewed(data: MediaShort) {
     let viewed: MediaShort[] = [];
