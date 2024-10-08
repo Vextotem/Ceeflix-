@@ -43,12 +43,9 @@ export default function Watch() {
   }
 
   function getSource() {
-    let url = `${import.meta.env.VITE_APP_API}/embed/${type}/${id}`;
-
-    url += `?v=${import.meta.env.VITE_APP_VERSION}&n=${import.meta.env.VITE_APP_NAME}`;
-
-    if (window.location.origin) url += `&o=${encodeURIComponent(window.location.origin)}`;
-    if (type === 'series') url += `&s=${season}&e=${episode}`;
+    let url = type === 'movie' 
+        ? `https://vidsrc.cc/v2/embed/movie?tmdb=${id}` 
+        : `https://vidsrc.cc/v2/embed/tv?tmdb=${id}&season=${season}&episode=${episode}`;
 
     return url;
   }
