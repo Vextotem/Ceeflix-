@@ -44,10 +44,7 @@ export default function Watch() {
 
   function getSource() {
     let url = `https://player.vidsrc.nl/embed/${type}/${id}`;
-
-    if (window.location.origin) url += `&o=${encodeURIComponent(window.location.origin)}`;
-    if (type === 'series') url += `&s=${season}&e=${episode}`;
-
+    
     return url;
   }
 
