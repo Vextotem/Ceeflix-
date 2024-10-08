@@ -43,8 +43,13 @@ export default function Watch() {
   }
 
   function getSource() {
-    let url = `https://player.vidsrc.nl/embed/${type}/${id}`;
-    
+    let url = `${import.meta.env.VITE_APP_API}/embed/${type}/${id}`;
+
+    url += `?v=${import.meta.env.VITE_APP_VERSION}&n=${import.meta.env.VITE_APP_NAME}`;
+
+    if (window.location.origin) url += `&o=${encodeURIComponent(window.location.origin)}`;
+    if (type === 'series') url += `&s=${season}&e=${episode}`;
+
     return url;
   }
 
@@ -158,7 +163,7 @@ export default function Watch() {
         <div className="player-controls">
           <i className="fa-regular fa-arrow-left" onClick={() => nav(`/${type}/${id}`)}></i>
 
-          {type === 'tv' && episode < maxEpisodes && <i className="fa-regular fa-forward-step right" onClick={() => nav(`/watch/${id}?s=${season}&e=${episode + 1}&me=${maxEpisodes}`)}></i>}
+          {type === 'series' && episode < maxEpisodes && <i className="fa-regular fa-forward-step right" onClick={() => nav(`/watch/${id}?s=${season}&e=${episode + 1}&me=${maxEpisodes}`)}></i>}
         </div>
 
         <iframe allowFullScreen referrerPolicy="origin" title={getTitle()} src={getSource()}></iframe>
