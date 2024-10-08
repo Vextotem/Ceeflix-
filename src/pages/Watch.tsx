@@ -19,7 +19,7 @@ export default function Watch() {
   const [season, setSeason] = useState(1);
   const [episode, setEpisode] = useState(1);
   const [maxEpisodes, setMaxEpisodes] = useState(1);
-  const [data, setData] = useState<Movie | Series>();
+  const [data, setData] = useState<Movie | Tv>();
 
   function addViewed(data: MediaShort) {
     let viewed: MediaShort[] = [];
@@ -51,7 +51,7 @@ export default function Watch() {
   function getTitle() {
     let title = data ? data.title : 'Watch';
 
-    if (type === 'series') title += ` S${season} E${episode}`;
+    if (type === 'tv') title += ` S${season} E${episode}`;
 
     return title;
   }
