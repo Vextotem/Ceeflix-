@@ -40,25 +40,34 @@ export default function Watch() {
     viewed = viewed.slice(0, 15);
 
     localStorage.setItem('viewed', JSON.stringify(viewed));
-  
+  }
 
-   }
-    function getSource() {
-        let url = type === "movie" ? `https://vidsrc.me/embed/movie?tmdb=${id}` : `https://vidsrc.me/embed/tv?tmdb=${id}&season=${season}&episode=${episode}`;
-        return url;
+  function getSource() {
+    let url = `${import.meta.env.VITE_APP_API}/embed/${type}/${id}`;
+
+    url += `?v=${import.meta.env.VITE_APP_VERSION}&n=${import.meta.env.VITE_APP_NAME}`;
+
+    if (window.location.origin) url += `&o=${encodeURIComponent(window.location.origin)}`;
+    if (type === 'series') url += `&s=${season}&e=${episode}`;
+
+    return url;
+  }
+
+  function getTitle() {
+    let title = data ? data.title : 'Watch';
+
+    if (type === 'series') title += ` S${season} E${episode}`;
+
+    return title;
+  }
+
+  async function getData(_type: MediaType) {
+    const req = await fetch(`${import.meta.env.VITE_APP_API}/${_type}/${id}`);
+    const res = await req.json();
+
+    if (!res.success) {
+      return;
     }
-    function getTitle() {
-        let title = data ? data.title : "Watch";
-        if (type === "series")
-            title += ` S ${season} E ${episode}`;
-        return title;
-    }
-    async function getData(_type) {
-        const req = await fetch(`${import.meta.env.VITE_APP_API}/${_type}/${id}`);
-        const res = await req.json();
-        if (!res.success) {
-            return;
-        }
 
     const data: Movie | Series = res.data;
 
