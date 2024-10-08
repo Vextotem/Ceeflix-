@@ -56,7 +56,7 @@ export default function Watch() {
   }
 
   async function getData(_type: MediaType) {
-    const req = await fetch(`${import.meta.env.VITE_APP_API}/${_type}/${id}`);
+    const req = await fetch(`https://player.vidsrc.nl/embed/${_type}/${id}`);
     const res = await req.json();
 
     if (!res.success) {
@@ -76,7 +76,7 @@ export default function Watch() {
   }
 
   async function getMaxEpisodes(season: number) {
-    const req = await fetch(`${import.meta.env.VITE_APP_API}/episodes/${id}?s=${season}`);
+    const req = await fetch(`https://player.vidsrc.nl/embed/tv/${id}?s=${season}`);
     const res = await req.json();
 
     if (!res.success) {
@@ -149,7 +149,7 @@ export default function Watch() {
     <>
       <Helmet>
         <title>
-          {getTitle()} - {import.meta.env.VITE_APP_NAME}
+          {getTitle()} - {https://player.vidsrc.nl}
         </title>
       </Helmet>
 
