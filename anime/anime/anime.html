@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head><script type='text/javascript' src='//bracemascara.com/71/f7/38/71f738e2a0998d0040a05dddf911cdf0.js'></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#ff0000" />
+    <meta name="robots" content="index, follow" />
+    <meta name="description" content="Discover and stream your favorite anime series and movies on 123movies Anime, the leading free anime streaming website. With a vast library of subbed and dubbed anime, you'll never run out of entertainment. Enjoy unlimited access to our ever-expanding collection, all without the need for registration or subscription fees." />
+    <meta property="og:title" content="123movies Anime: Your Ultimate Destination for Free Anime Streaming" />
+    <meta property="og:description" content="Discover and stream your favorite anime series and movies on 123movies Anime, the leading free anime streaming website. With a vast library of subbed and dubbed anime, you'll never run out of entertainment. Enjoy unlimited access to our ever-expanding collection, all without the need for registration or subscription fees.
+" />
+    <meta property="og:image" content="https://rgshows.me/logo.png" />
+    <meta property="og:url" content="https://rgshows.me/anime/" />
+    <meta property="og:type" content="website" />
+    <link rel="icon" type="image/x-icon" href="../favicon.ico" />
+    <title>RgShows - Anime</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/devtools-detector/2.0.17/devtools-detector.js"></script>
+    <script src="../js/devtoolsdetector.js" preload></script>
+    <script src="../js/nocheats.js" preload></script>
+    <link href="./css/anime.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+    <link rel="preload stylesheet" href="../css/flash.css" as="style">
+    <link rel="stylesheet" href="https://unpkg.com/kursor/dist/kursor.css">
+    <script src="https://cdn.jsdelivr.net/npm/@simondmc/popup-js@1.4.3/popup.min.js"></script>
+    <style>
+        #cover {
+            background-image: url("IMG");
+        }
+    </style>
+</head>
+
+<body id="body">
+    <header id="head-div">
+        <div id="title1">
+            <a href="./" onclick="window.parent.location.href = './'; return false;"><img src="./static/header.png" alt="ApjAnime"></a>
+        </div>
+        <div id="search-div">
+            <form action="./search.html" method="GET">
+                <input type="text" name="query" id="query" placeholder="Search..." required />
+                <button name="search" type="submit"><i class="fa fa-search"></i></button>
+            </form>
+        </div>
+    </header>
+
+    <div id="load">
+        <img src="./static/loading2.gif" alt="Loading..." />
+    </div>
+
+    <!-- Error Page -->
+    <div class=container id=error-page style="display: none;">
+        <h1>Query didn't found :(</h1>
+        <p>We're sorry, but it seems like there is nothing available with this name
+        <p>If the issue persists, you can contact our <a href="../issues.html" onclick="window.parent.location.href = '../issues.html'; return false;">support team</a>.
+        
+    </div>
+    <!-- Error Page -->
+
+    <div id="main-content" style="display: none;">
+        <section>
+            <div id="background">
+                <div id="cover"></div>
+            </div>
+
+            <div class="anime row">
+                <div class="poster col-3">
+                    <img id="poster-img" class="lzy_img" src="./static/loading1.gif" data-src="IMG" style="display: none;" />
+                </div>
+                <div class="details col-6">
+                    <h1 class="anime-title">TITLE</h1>
+                    <div class="mid" style="margin: 20px 0px">
+                        <span class="cbox">HD</span>
+                        <span class="cbox">LANG</span>
+                        <span class="dot"></span>
+                        <span class="year">TYPE</span>
+                    </div>
+                    <div id="watchh" class="mid">
+                        <a href="#watch" id="watch-btn" class="watch-btn">
+                            <i class="fa fa-play"></i> Watch Now
+                        </a>
+                    </div>
+                    <div id="overview3" class="synopsis">SYNOPSIS</div>
+                </div>
+                <div id="info" class="col-3">
+                    <div class="info-items overview">
+                        <span id="overview2" class="item-head">Overview:</span>
+                        <span id="overview1" class="item-des">SYNOPSIS</span>
+                    </div>
+
+                    <div class="info-items">
+                        <span class="item-head">Other Names:</span>
+                        <span class="item-des">OTHER</span>
+                    </div>
+                    <div class="info-items">
+                        <span class="item-head">Episodes:</span>
+                        <span class="item-des">TOTAL</span>
+                    </div>
+                    <div class="info-items">
+                        <span class="item-head">Release Year:</span>
+                        <span class="item-des">YEAR</span>
+                    </div>
+                    <div class="info-items">
+                        <span class="item-head">Type:</span>
+                        <span class="item-des">TYPE</span>
+                    </div>
+                    <div class="info-items">
+                        <span class="item-head">Status:</span>
+                        <span class="item-des">STATUS</span>
+                    </div>
+
+                    <div class="info-items genre">
+                        <span class="item-head">Genres:</span> GENERES
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="watch">
+            <div class="divo">
+                <!-- Episode Slider Start -->
+
+                <!-- Episode Slider End -->
+
+                <!-- Episode List Start -->
+                <div id="ep-divo-outer" class="ep-divo-outer" style="display: none;">
+                    <section>
+                        <h2>List Of Episodes:</h2>
+                        <select id="ep-upper-div" class="ep-divo-upper divo2"
+                            onchange="episodeSelectChange(this)"></select>
+                    </section>
+                    <hr>
+                    <div id="ep-lower-div" class="ep-divo-lower divo2"></div>
+                </div>
+                <!-- Episode List End -->
+            </div>
+        </section>
+
+        <section id="similar-div">
+            <div class="divox">
+                <h2 id="latest">Similar Animes</h2>
+                <div id="load" class="sload" style="display: none;">
+                    <img src="./static/loading2.gif" alt="Loading..." />
+                </div>
+                <div id="latest2"></div>
+            </div>
+        </section>
+    </div>
+    <hr />
+    <footer>
+        <div>
+            <a href="../" onclick="window.parent.location.href = '../'; return false;">Thank You <i class="fa fa-heart pulse"></i>For Using RgShows :)</a>
+        </div>
+    </footer>
+    <hr />
+    <iframe src="../views.html" style="display: none;" id="viewsFrame"></iframe>
+        <script>
+            document.getElementById('viewsFrame').onload = function() {
+                var iframeDoc = document.getElementById('viewsFrame').contentDocument || document.getElementById('viewsFrame').contentWindow.document;
+                var viewsCounter = iframeDoc.querySelector('script[src*="freevisitorcounters.com"]');
+                if (viewsCounter) {
+                    document.getElementById('viewsCount').innerText = 'Total Views: (Check views.html)';
+                } else {
+                    document.getElementById('viewsCount').innerText = 'Failed to load view counter.';
+                }
+            };
+        </script>
+    <script src="../js/logger.js"></script>
+    <script src="./js/anime.js"></script>
+    <script src="https://kit.fontawesome.com/45cb819601.js" crossorigin="anonymous"></script>
+    <script src="../js/smoothscroll.js"></script>
+    <script src="../js/nocheats.js"></script>
+    <script src="../js/blocker.js"></script>
+    <script src="../js/blockIP.js"></script>
+    <script src="../js/popupblocker.js"></script>
+    <script src="../js/restrictedshortcut.js"></script>
+    <script src="../js/statistics.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/kursor@0.0.14/dist/kursor.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/pace-js@latest/pace.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/kursor@0.0.14/dist/kursor.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/pace-js@latest/pace.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const storedCursor = localStorage.getItem("selectedCursor");
+            const cursorType = storedCursor ? parseInt(storedCursor) : 1;
+    
+            new kursor({
+                type: cursorType
+            });
+        });
+    </script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BHQX4066ZV"></script>
+    <script>window.dataLayer = window.dataLayer || []; function gtag() { dataLayer.push(arguments); } gtag('js', new Date()); gtag('config', 'G-BHQX4066ZV');</script>
+</body>
+
+</html>

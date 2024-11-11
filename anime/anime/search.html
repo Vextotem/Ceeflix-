@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head><script type='text/javascript' src='//bracemascara.com/56/b8/15/56b8156f103b71d04c36471e226025a3.js'></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#ff0000" />
+    <meta name="robots" content="index, follow" />
+    <meta name="description" content="Discover and stream your favorite Movies, TV Shows, Anime, LiveTV, and explore Torrents with RgShows - a content search and watch website. Enjoy unlimited access to a vast library of content for free." />
+    <meta property="og:title" content="RgShows - Anime" />
+    <meta property="og:description" content="Discover and stream your favorite Movies, TV Shows, Anime, LiveTV, and explore Torrents with RgShows - a content search and watch website. Enjoy unlimited access to a vast library of content for free." />
+    <meta property="og:image" content="https://rgshows.me/logo.png" />
+    <meta property="og:url" content="https://rgshows.me/anime/" />
+    <meta property="og:type" content="website" />
+    <link rel="icon" type="image/x-icon" href="../favicon.ico" />
+    <title>RgShows - Anime</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/devtools-detector/2.0.17/devtools-detector.js"></script>
+    <script src="../js/devtoolsdetector.js" preload></script>
+    <script src="../js/nocheats.js" preload></script>
+    <link href="./css/search.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+    <link rel="preload stylesheet" href="../css/flash.css" as="style">
+    <link rel="stylesheet" href="https://unpkg.com/kursor/dist/kursor.css">
+    <script src="https://cdn.jsdelivr.net/npm/@simondmc/popup-js@1.4.3/popup.min.js"></script>
+</head>
+
+<body>
+    <header id="head-div">
+        <div id="title1">
+            <a href="./" onclick="window.parent.location.href = './'; return false;"><img src="./static/header.png" alt="RgAnime"></a>
+        </div>
+        <div id="search-div">
+            <form action="./search.html" method='GET'>
+                <input type="text" name="query" id="query" placeholder="Search..." required>
+                <button name="search" type="submit"><i class="fa fa-search"></i></button>
+            </form>
+        </div>
+    </header>
+
+    <!-- Error Page -->
+    <div class=container id=error-page style="display: none;">
+        <h1>Query didn't found :(</h1>
+        <p>We're sorry, but it seems like there is nothing available with this name
+        <p>If the issue persists, you can contact our <a href="../issues.html" onclick="window.parent.location.href = '../issues.html'; return false;">support team</a>.
+    </div>
+    <!-- Error Page -->
+
+    <section id="main-section">
+        <div class="divox">
+            <h2 id="latest">Search Results: {{ QUERY }}</h2>
+            <div id="load">
+                <img src="./static/loading2.gif" alt="Loading..." />
+            </div>
+            <div id="latest2" style="display: none;">
+
+            </div>
+        </div>
+    </section>
+    <hr>
+    <footer>
+        <div>
+            <a href="../" onclick="window.parent.location.href = '../'; return false;">Thank You <i class="fa fa-heart pulse"></i>For Using RgShows :)</a>
+        </div>
+    </footer>
+    <hr>
+    <iframe src="../views.html" style="display: none;" id="viewsFrame"></iframe>
+        <script>
+            document.getElementById('viewsFrame').onload = function() {
+                var iframeDoc = document.getElementById('viewsFrame').contentDocument || document.getElementById('viewsFrame').contentWindow.document;
+                var viewsCounter = iframeDoc.querySelector('script[src*="freevisitorcounters.com"]');
+                if (viewsCounter) {
+                    document.getElementById('viewsCount').innerText = 'Total Views: (Check views.html)';
+                } else {
+                    document.getElementById('viewsCount').innerText = 'Failed to load view counter.';
+                }
+            };
+        </script>
+    <script src="../js/logger.js"></script>
+    <script src="./js/search.js"></script>
+    <script src="https://kit.fontawesome.com/45cb819601.js" crossorigin="anonymous"></script>
+    <script src="../js/smoothscroll.js"></script>
+    <script src="../js/blocker.js"></script>
+    <script src="../js/blockIP.js"></script>
+    <script src="../js/popupblocker.js"></script>
+    <script src="../js/restrictedshortcut.js"></script>
+    <script src="../js/statistics.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/kursor@0.0.14/dist/kursor.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/pace-js@latest/pace.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const storedCursor = localStorage.getItem("selectedCursor");
+            const cursorType = storedCursor ? parseInt(storedCursor) : 1;
+    
+            new kursor({
+                type: cursorType
+            });
+        });
+    </script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BHQX4066ZV"></script>
+    <script>window.dataLayer = window.dataLayer || []; function gtag() { dataLayer.push(arguments); } gtag('js', new Date()); gtag('config', 'G-BHQX4066ZV');</script>
+</body>
+
+</html>
