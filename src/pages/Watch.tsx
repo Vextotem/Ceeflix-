@@ -18,6 +18,7 @@ export default function Watch() {
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
   const sources = [
+  { name: 'Ghost', url: 'https://api.vidsrc.win/su.html' },  // New source
     { name: 'Braflix', url: 'https://vid.braflix.win/embed' },
     { name: 'Vidlink', url: 'https://vidlink.pro/' },
     { name: 'Viaplay', url: 'https://api.vidsrc.win/vid.html' },
@@ -33,7 +34,6 @@ export default function Watch() {
     { name: 'Source 9 India', url: 'https://api.vidsrc.win/embed.html' },
     { name: 'Source 10 India', url: 'https://api.vidsrc.win/api.html' },
     { name: 'Brazil', url: 'https://embed.warezcdn.com' },
-    { name: 'Ghost', url: 'https://api.vidsrc.win/su.html' },  // New source
     { name: 'Super', url: 'https://api.vidsrc.win/super.html' }  // New source
   ];
 
