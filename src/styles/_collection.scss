@@ -38,9 +38,9 @@
   margin: 15px -60px 0;
   padding: 0 60px;
 
-  overflow-x: auto; /* Changed from clip to auto for horizontal scroll */
+  overflow-x: auto; /* Allows horizontal scrolling */
   scroll-behavior: smooth; /* Enables smooth scrolling */
-  white-space: nowrap; /* Ensures items stay in one row */
+  white-space: nowrap; /* Prevents content wrapping */
 }
 
 .collection-cards {
@@ -48,8 +48,6 @@
   flex-direction: row;
   align-items: center;
   column-gap: 15px;
-
-  width: 100%;
 
   transition: transform 300ms ease-in-out;
 }
@@ -65,10 +63,8 @@
   align-items: center;
   justify-content: center;
 
-  position: absolute;
-
+  position: absolute; /* Keeps the arrows fixed */
   top: 0;
-  left: 0;
 
   height: 100%;
   width: 45px;
