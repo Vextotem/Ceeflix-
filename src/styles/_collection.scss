@@ -112,11 +112,12 @@
   justify-content: center;
   position: absolute;
   top: 0;
-  left: 0;
+  bottom: 0; /* Make arrows stay within the container */
   height: 100%;
   width: 45px;
   background: linear-gradient(to right, rgba(0, 0, 0, 0.7), transparent);
   cursor: pointer;
+  z-index: 10; /* Ensure arrows stay above other content */
 
   &.right {
     left: auto;
