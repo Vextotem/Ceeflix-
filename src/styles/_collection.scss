@@ -64,10 +64,11 @@
   align-items: center;
   justify-content: center;
 
-  position: absolute;  // Fixed positioning within the slider
-  top: 0;
-  left: 0;
-  height: 100%;
+  position: fixed;  // Fixes the arrows relative to the screen
+  top: 50%;
+  z-index: 2;  // Ensures they are above the content
+
+  height: 100px;  // Adjust based on desired size
   width: 45px;
 
   background: linear-gradient(to right, rgba(0, 0, 0, 0.7), transparent);
@@ -75,10 +76,14 @@
   cursor: pointer;
 
   &.right {
-    left: auto;
-    right: 0;
-
+    right: 0;  // Position on the right side of the screen
+    left: auto;  // Remove any conflicting left positioning
     background: linear-gradient(to left, rgba(0, 0, 0, 0.7), transparent);
+  }
+
+  &.left {
+    left: 0;  // Position on the left side of the screen
+    right: auto;  // Remove any conflicting right positioning
   }
 }
 
