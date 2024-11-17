@@ -132,7 +132,7 @@ export default function Card({ id, poster, title, type, Ref }: CardProps) {
         )}
       </div>
 
-      {/* Separate Arrow Button Container */}
+      {/* Separate Fixed Arrow Button Container */}
       <div className="media-card-arrow">
         <button className="button secondary" onClick={onChevronClick}>
           <i className="fa-solid fa-chevron-down"></i>
