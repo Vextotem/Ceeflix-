@@ -130,14 +130,15 @@ export default function Card({ id, poster, title, type, Ref }: CardProps) {
             <i className="fa-solid fa-plus"></i>
           </button>
         )}
-      </div>
 
-      {/* Separate Fixed Arrow Button Container */}
-      <div className="media-card-arrow">
-        <button className="button secondary" onClick={onChevronClick}>
+        <button className="button secondary right" onClick={onChevronClick}>
           <i className="fa-solid fa-chevron-down"></i>
         </button>
       </div>
     </Link>
   );
 }
+
+
+
+In this code, Make the Arrows fixed 
