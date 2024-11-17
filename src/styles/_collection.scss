@@ -32,7 +32,8 @@
   align-items: center;
   margin: 15px -60px 0;
   padding: 0 60px;
-  overflow-x: clip;
+  overflow-x: auto; /* Make the slider scrollable */
+  scroll-snap-type: x mandatory; /* Optional for smooth scrolling */
 }
 
 .collection-cards {
@@ -40,65 +41,65 @@
   flex-direction: row;
   align-items: center;
   column-gap: 15px;
-  width: 100%;
+  width: max-content; /* Allow cards to overflow horizontally */
+  transition: transform 300ms ease-in-out;
+}
+
+.collection-cards .media-card {
+  position: relative;
+  min-width: calc(16.67% - 13px);
+  max-width: calc(16.67% - 13px);
   transition: transform 300ms ease-in-out;
 
-  .media-card {
-    position: relative;
-    min-width: calc(16.67% - 13px);
-    max-width: calc(16.67% - 13px);
-    transition: transform 300ms ease-in-out;
+  &.active {
+    transform: scale(1.05);
+  }
 
-    &.active {
-      transform: scale(1.05);
-    }
+  img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 8px;
+  }
 
-    img {
-      width: 100%;
-      height: auto;
-      display: block;
-      border-radius: 8px;
-    }
+  .media-card-actions {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0 10px;
+    z-index: 10;
 
-    .media-card-actions {
-      position: absolute;
-      bottom: 10px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      justify-content: space-between;
-      width: 100%;
-      padding: 0 10px;
-      z-index: 10;
+    .button {
+      background: rgba(0, 0, 0, 0.6);
+      color: white;
+      border: none;
+      padding: 8px;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: background 0.3s;
 
-      .button {
-        background: rgba(0, 0, 0, 0.6);
-        color: white;
-        border: none;
-        padding: 8px;
-        border-radius: 50%;
-        cursor: pointer;
-        transition: background 0.3s;
-
-        &:hover {
-          background: rgba(0, 0, 0, 0.9);
-        }
-
-        i {
-          font-size: 16px;
-        }
+      &:hover {
+        background: rgba(0, 0, 0, 0.9);
       }
 
-      .secondary {
-        background: rgba(255, 255, 255, 0.6);
+      i {
+        font-size: 16px;
+      }
+    }
 
-        &:hover {
-          background: rgba(255, 255, 255, 0.8);
-        }
+    .secondary {
+      background: rgba(255, 255, 255, 0.6);
 
-        &.right {
-          margin-left: auto;
-        }
+      &:hover {
+        background: rgba(255, 255, 255, 0.8);
+      }
+
+      &.right {
+        margin-left: auto;
       }
     }
   }
