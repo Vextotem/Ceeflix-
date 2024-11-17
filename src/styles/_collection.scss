@@ -38,7 +38,19 @@
   margin: 15px -60px 0;
   padding: 0 60px;
 
-  overflow-x: clip;
+  overflow-x: auto; /* Changed from clip to auto */
+  scrollbar-width: thin; /* Optional: Style for scrollbar */
+  -ms-overflow-style: none; /* Hide scrollbar in IE/Edge */
+  &::-webkit-scrollbar {
+    height: 8px; /* Horizontal scrollbar height */
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.5); /* Thumb color */
+    border-radius: 4px;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent; /* Track color */
+  }
 }
 
 .collection-cards {
