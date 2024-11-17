@@ -1,140 +1,171 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect, useRef, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+.collections {
+  display: flex;
+  flex-direction: column;
+  margin: 85px 0 0;
+  padding: 0 60px 30px;
 
-import Wishlist from '@/utils/Wishlist';
-
-import MediaShort from '@/types/MediaShort';
-import Continue from '@/types/Continue';
-
-interface CardProps extends MediaShort {
-  Ref?: React.RefObject<HTMLAnchorElement>;
+  &.overlap {
+    position: relative;
+    margin-top: -10vh;
+    z-index: 1;
+  }
 }
 
-export default function Card({ id, poster, title, type, Ref }: CardProps) {
-  const ref = useRef<HTMLAnchorElement>(null);
+.collection {
+  margin-top: 60px;
 
-  const nav = useNavigate();
-
-  const [active, setActive] = useState(false);
-  const [wished, setWished] = useState(false);
-
-  const [episode, setEpisode] = useState(1);
-  const [season, setSeason] = useState(1);
-
-  function getContinue() {
-    if (type !== 'series') return;
-
-    const cont = localStorage.getItem(`continue_${id}`);
-
-    if (!cont) return;
-
-    const parsed: Continue = JSON.parse(cont);
-
-    setEpisode(parsed.episode);
-    setSeason(parsed.season);
+  &:first-child,
+  &:first-of-type {
+    margin-top: 0;
   }
+}
 
-  function onCardHover() {
-    if (active) return;
+.collection-title {
+  font-size: 20px;
+  font-weight: 500;
+}
 
-    setActive(true);
-  }
+.collection-slider {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin: 15px -60px 0;
+  padding: 0 60px;
+  overflow-x: clip;
+}
 
-  function onCardLeave() {
-    if (!active) return;
+.collection-cards {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  column-gap: 15px;
+  width: 100%;
+  transition: transform 300ms ease-in-out;
 
-    setActive(false);
-  }
+  .media-card {
+    position: relative;
+    min-width: calc(16.67% - 13px);
+    max-width: calc(16.67% - 13px);
+    transition: transform 300ms ease-in-out;
 
-  function onCardClick(e: React.MouseEvent<HTMLAnchorElement>) {
-    if (active) return;
-
-    e.preventDefault();
-
-    setActive(true);
-  }
-
-  function onWindowClick(e: MouseEvent) {
-    if (!active) return;
-
-    if ((Ref || ref).current?.contains(e.target as Node)) return;
-
-    setActive(false);
-  }
-
-  function onPlusClick(e: React.MouseEvent<HTMLButtonElement>) {
-    e.preventDefault();
-
-    Wishlist.add({ id, poster, title, type });
-  }
-
-  function onCheckClick(e: React.MouseEvent<HTMLButtonElement>) {
-    e.preventDefault();
-
-    Wishlist.remove(id, type);
-  }
-
-  function onChevronClick(e: React.MouseEvent<HTMLButtonElement>) {
-    e.preventDefault();
-
-    nav(`/${type}/${id}`);
-  }
-
-  useEffect(() => {
-    getContinue();
-
-    setWished(Wishlist.has(id, type));
-
-    function onWishlistChange() {
-      setWished(Wishlist.has(id, type));
+    &.active {
+      transform: scale(1.05);
     }
 
-    Wishlist.on(id, type, onWishlistChange);
+    img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 8px;
+    }
 
-    return () => {
-      Wishlist.off(id, type, onWishlistChange);
-    };
-  }, []);
+    .media-card-actions {
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      padding: 0 10px;
+      z-index: 10;
 
-  useEffect(() => {
-    window.addEventListener('click', onWindowClick);
+      .button {
+        background: rgba(0, 0, 0, 0.6);
+        color: white;
+        border: none;
+        padding: 8px;
+        border-radius: 50%;
+        cursor: pointer;
+        transition: background 0.3s;
 
-    return () => {
-      window.removeEventListener('click', onWindowClick);
-    };
-  }, [active]);
+        &:hover {
+          background: rgba(0, 0, 0, 0.9);
+        }
 
-  return (
-    <Link
-      ref={Ref || ref}
-      className={`media-card ${active ? 'active' : ''}`}
-      to={`/watch/${id}${type === 'series' ? `?s=${season}&e=${episode}` : ''}`}
-      onClick={onCardClick}
-      onMouseOver={onCardHover}
-      onMouseLeave={onCardLeave}
-    >
-      <img src={poster} alt={title} loading="lazy" />
+        i {
+          font-size: 16px;
+        }
+      }
 
-      <div className="media-card-actions">
-        <button className="button">
-          <i className="fa-solid fa-play"></i>
-        </button>
+      .secondary {
+        background: rgba(255, 255, 255, 0.6);
 
-        {wished ? (
-          <button className="button" onClick={onCheckClick}>
-            <i className="fa-solid fa-check"></i>
-          </button>
-        ) : (
-          <button className="button secondary" onClick={onPlusClick}>
-            <i className="fa-solid fa-plus"></i>
-          </button>
-        )}
+        &:hover {
+          background: rgba(255, 255, 255, 0.8);
+        }
 
-        <button className="button secondary right" onClick={onChevronClick}>
-          <i className="fa-solid fa-chevron-down"></i>
-        </button>
-      </div>
-    </Link>
-  );
+        &.right {
+          margin-left: auto;
+        }
+      }
+    }
+  }
+}
+
+.collection-arrow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 45px;
+  background: linear-gradient(to right, rgba(0, 0, 0, 0.7), transparent);
+  cursor: pointer;
+
+  &.right {
+    left: auto;
+    right: 0;
+    background: linear-gradient(to left, rgba(0, 0, 0, 0.7), transparent);
+  }
+}
+
+@media (max-width: 1200px) {
+  .collection-cards .media-card {
+    min-width: calc(20% - 13px);
+    max-width: calc(20% - 13px);
+  }
+}
+
+@media (max-width: 1000px) {
+  .collections {
+    padding: 0 40px 30px;
+  }
+
+  .collection-slider {
+    margin: 15px -40px 0;
+    padding: 0 40px;
+  }
+
+  .collection-cards .media-card {
+    min-width: calc(25% - 13px);
+    max-width: calc(25% - 13px);
+  }
+}
+
+@media (max-width: 700px) {
+  .collections {
+    padding: 0 30px 30px;
+  }
+
+  .collection-slider {
+    margin: 15px -30px 0;
+    padding: 0 30px;
+  }
+
+  .collection-cards .media-card {
+    min-width: calc(33.33% - 13px);
+    max-width: calc(33.33% - 13px);
+  }
+}
+
+@media (max-width: 500px) {
+  .collection-cards .media-card {
+    min-width: calc(50% - 13px);
+    max-width: calc(50% - 13px);
+  }
 }
