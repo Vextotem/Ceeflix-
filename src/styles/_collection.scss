@@ -29,16 +29,15 @@
 }
 
 .collection-slider {
-  position: relative;
-
+  position: relative; /* Keeps arrows positioned relative to this container */
   display: flex;
-  flex-direction: row;
   align-items: center;
 
-  margin: 15px -60px 0;
-  padding: 0 60px;
+  margin: 15px 0 0;
+  padding: 0;
 
-  overflow: visible; /* Ensure content inside remains visible */
+  /* Ensure arrows are not affected by scrolling */
+  overflow: hidden;
 }
 
 .collection-cards {
@@ -47,102 +46,55 @@
   align-items: center;
   column-gap: 15px;
 
-  overflow-x: auto; /* Enable horizontal scrolling */
-  scroll-behavior: smooth; /* Smooth scrolling behavior */
-  padding: 0; /* No extra padding that affects alignment */
+  /* Enable scrolling */
+  overflow-x: auto;
+  scroll-behavior: smooth;
 
-  transition: transform 300ms ease-in-out;
+  /* Prevent content from wrapping */
+  white-space: nowrap;
+
+  /* Prevent shrinking or collapsing */
+  flex-shrink: 0;
 }
 
 .collection-cards::-webkit-scrollbar {
-  height: 8px; /* Horizontal scrollbar height */
+  height: 8px;
 }
 
 .collection-cards::-webkit-scrollbar-thumb {
-  background-color: rgba(0, 0, 0, 0.5); /* Thumb color */
+  background-color: rgba(0, 0, 0, 0.5);
   border-radius: 4px;
 }
 
 .collection-cards::-webkit-scrollbar-track {
-  background: transparent; /* Track color */
+  background: transparent;
 }
 
 .collection-cards .media-card {
   min-width: calc(16.67% - 13px);
   max-width: calc(16.67% - 13px);
 
-  /* Ensure cards remain visible at all times */
-  flex-shrink: 0; /* Prevent shrinking of cards */
+  /* Ensure cards are treated as individual items */
+  flex-shrink: 0;
 }
 
 .collection-arrow {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-
-  position: absolute;
-
+  position: absolute; /* Keeps arrows fixed within .collection-slider */
   top: 0;
-  left: 0;
-
   height: 100%;
   width: 45px;
 
-  background: linear-gradient(to right, rgba(0, 0, 0, 0.7), transparent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   cursor: pointer;
+
+  background: linear-gradient(to right, rgba(0, 0, 0, 0.7), transparent);
 
   &.right {
     left: auto;
     right: 0;
-
     background: linear-gradient(to left, rgba(0, 0, 0, 0.7), transparent);
-  }
-}
-
-@media (max-width: 1200px) {
-  .collection-cards .media-card {
-    min-width: calc(20% - 13px);
-    max-width: calc(20% - 13px);
-  }
-}
-
-@media (max-width: 1000px) {
-  .collections {
-    padding: 0 40px 30px;
-  }
-
-  .collection-slider {
-    margin: 15px -40px 0;
-    padding: 0 40px;
-  }
-
-  .collection-cards .media-card {
-    min-width: calc(25% - 13px);
-    max-width: calc(25% - 13px);
-  }
-}
-
-@media (max-width: 700px) {
-  .collections {
-    padding: 0 30px 30px;
-  }
-
-  .collection-slider {
-    margin: 15px -30px 0;
-    padding: 0 30px;
-  }
-
-  .collection-cards .media-card {
-    min-width: calc(33.33% - 13px);
-    max-width: calc(33.33% - 13px);
-  }
-}
-
-@media (max-width: 500px) {
-  .collection-cards .media-card {
-    min-width: calc(50% - 13px);
-    max-width: calc(50% - 13px);
   }
 }
