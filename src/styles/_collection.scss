@@ -38,9 +38,8 @@
   margin: 15px -60px 0;
   padding: 0 60px;
 
-  overflow-x: auto; /* Allows horizontal scrolling */
-  scroll-behavior: smooth; /* Enables smooth scrolling */
-  white-space: nowrap; /* Prevents content wrapping */
+  /* No changes here to ensure arrows stay unaffected */
+  overflow: hidden; /* Prevent overflow from affecting arrows */
 }
 
 .collection-cards {
@@ -49,7 +48,25 @@
   align-items: center;
   column-gap: 15px;
 
+  width: 100%;
+  overflow-x: auto; /* Enable horizontal scrolling */
+  scroll-behavior: smooth; /* Smooth scrolling behavior */
+  padding: 0 10px; /* Optional for inner padding */
+
   transition: transform 300ms ease-in-out;
+}
+
+.collection-cards::-webkit-scrollbar {
+  height: 8px; /* Horizontal scrollbar height */
+}
+
+.collection-cards::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.5); /* Thumb color */
+  border-radius: 4px;
+}
+
+.collection-cards::-webkit-scrollbar-track {
+  background: transparent; /* Track color */
 }
 
 .collection-cards .media-card {
@@ -63,8 +80,10 @@
   align-items: center;
   justify-content: center;
 
-  position: absolute; /* Keeps the arrows fixed */
+  position: absolute;
+
   top: 0;
+  left: 0;
 
   height: 100%;
   width: 45px;
