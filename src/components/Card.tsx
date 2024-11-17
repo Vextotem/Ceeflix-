@@ -138,7 +138,3 @@ export default function Card({ id, poster, title, type, Ref }: CardProps) {
     </Link>
   );
 }
-
-
-
-In this code, Make the Arrows fixed 
