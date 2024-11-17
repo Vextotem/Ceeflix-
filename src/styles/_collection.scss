@@ -38,8 +38,7 @@
   margin: 15px -60px 0;
   padding: 0 60px;
 
-  /* No changes here to ensure arrows stay unaffected */
-  overflow: hidden; /* Prevent overflow from affecting arrows */
+  overflow: visible; /* Ensure content inside remains visible */
 }
 
 .collection-cards {
@@ -48,10 +47,9 @@
   align-items: center;
   column-gap: 15px;
 
-  width: 100%;
   overflow-x: auto; /* Enable horizontal scrolling */
   scroll-behavior: smooth; /* Smooth scrolling behavior */
-  padding: 0 10px; /* Optional for inner padding */
+  padding: 0; /* No extra padding that affects alignment */
 
   transition: transform 300ms ease-in-out;
 }
@@ -72,6 +70,9 @@
 .collection-cards .media-card {
   min-width: calc(16.67% - 13px);
   max-width: calc(16.67% - 13px);
+
+  /* Ensure cards remain visible at all times */
+  flex-shrink: 0; /* Prevent shrinking of cards */
 }
 
 .collection-arrow {
