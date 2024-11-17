@@ -38,8 +38,7 @@
   margin: 15px -60px 0;
   padding: 0 60px;
 
-  overflow-x: auto;  // Enable horizontal scrolling by mouse
-  scroll-snap-type: x mandatory;  // Optional: add smooth snap scrolling if desired
+  overflow-x: clip;
 }
 
 .collection-cards {
@@ -64,7 +63,8 @@
   align-items: center;
   justify-content: center;
 
-  position: absolute;  // Keep the arrows absolute
+  position: absolute;
+
   top: 0;
   left: 0;
 
@@ -81,9 +81,6 @@
 
     background: linear-gradient(to left, rgba(0, 0, 0, 0.7), transparent);
   }
-
-  // Ensure arrows are fixed to the viewport, not scrolling with the content
-  position: fixed;
 }
 
 @media (max-width: 1200px) {
