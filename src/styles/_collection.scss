@@ -38,8 +38,8 @@
   margin: 15px -60px 0;
   padding: 0 60px;
 
-  overflow-x: auto; // Allows horizontal scrolling with the mouse
-  scroll-behavior: smooth; // Ensures smooth scrolling
+  overflow-x: auto;  // Enable horizontal scrolling by mouse
+  scroll-snap-type: x mandatory;  // Optional: add smooth snap scrolling if desired
 }
 
 .collection-cards {
@@ -64,9 +64,9 @@
   align-items: center;
   justify-content: center;
 
-  position: fixed;  // Keeps the arrows fixed in place
-  top: 50%; // Keeps the arrows vertically centered
-  z-index: 2;  // Ensures they are above the content
+  position: absolute;  // Keep the arrows absolute
+  top: 0;
+  left: 0;
 
   height: 100%;
   width: 45px;
@@ -82,10 +82,8 @@
     background: linear-gradient(to left, rgba(0, 0, 0, 0.7), transparent);
   }
 
-  &.left {
-    left: 0;
-    right: auto;
-  }
+  // Ensure arrows are fixed to the viewport, not scrolling with the content
+  position: fixed;
 }
 
 @media (max-width: 1200px) {
