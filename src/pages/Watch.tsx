@@ -21,6 +21,7 @@ export default function Watch() {
     { name: 'Braflix', url: 'https://vid.braflix.win/embed' },
     { name: 'Vidlink', url: 'https://vidlink.pro/' },
     { name: 'Viaplay', url: 'https://api.vidsrc.win/vid.html' },
+    { name: 'Flix', url: 'https://api.vidsrc.win/rip.html' },
     { name: 'Hindi HD', url: 'https://api.vidsrc.win/hindi.html' },
     { name: 'Vidsrc', url: 'https://vidsrc.io/embed' },
     { name: 'Simple', url: 'https://english.vidsrc.nl/embed' },
@@ -43,6 +44,7 @@ export default function Watch() {
     'Source 8 India': 'https://api.vidsrc.win/greentv.html',
     'Source 9 India': 'https://api.vidsrc.win/embedtv.html',
     'Viaplay': 'https://api.vidsrc.win/vidtv.html',
+    'Flix': 'https://api.vidsrc.win/riptv.html',
     'Hindi HD': 'https://api.vidsrc.win/hinditv.html',
     'Ghost': 'https://api.vidsrc.win/sutv.html',  
     'Super': 'https://api.vidsrc.win/supertv.html' 
