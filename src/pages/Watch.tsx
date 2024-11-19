@@ -76,41 +76,45 @@ export default function Watch() {
   }
 
   function getSource() {
-    const baseSource = sources.find(s => s.name === source)?.url;
-    if (!baseSource) return '';
+  const baseSource = sources.find(s => s.name === source)?.url;
+  if (!baseSource) return '';
 
-    let url;
-    if (type === 'movie') {
-      if (source === 'Brazil') {
-        url = `${baseSource}/filme/${id}`;
-      } else if (source === 'PrimeWire') {
-        url = `${baseSource}/movie?tmdb=${id}`;
-      } else if (source === 'Multi') {
-        url = `https://vidsrc.dev/embed/movie/${id}`;
-      } else if (specialSeriesSourcesMap[source]) {
-        url = `${baseSource}?id=${id}`;
-      } else if (source === 'Source 10 India') {
-        url = `${baseSource}?id=${id}`;
-      } else {
-        url = `${baseSource}/movie/${id}`;
-      }
-    } else if (type === 'series') {
-      if (source === 'Brazil') {
-        url = `${baseSource}/serie/${id}/${season}/${episode}`;
-      } else if (source === 'PrimeWire') {
-        url = `${baseSource}/tv?tmdb=${id}&season=${season}&episode=${episode}`;
-      } else if (source === 'Multi') {
-        url = `https://vidsrc.dev/embed/tv/${id}/${season}/${episode}`;
-      } else if (specialSeriesSourcesMap[source]) {
-        url = `${specialSeriesSourcesMap[source]}?id=${id}&s=${season}&e=${episode}`;
-      } else if (source === 'Source 10 India') {
-        url = `${baseSource}?id=${id}&s=${season}&e=${episode}`;
-      } else {
-        url = `${baseSource}/tv/${id}/${season}/${episode}`;
-      }
+  let url;
+  if (type === 'movie') {
+    if (source === 'Brazil') {
+      url = `${baseSource}/filme/${id}`;
+    } else if (source === 'PrimeWire') {
+      url = `${baseSource}/movie?tmdb=${id}`;
+    } else if (source === 'Multi') {
+      url = `https://vidsrc.dev/embed/movie/${id}`;
+    } else if (source === 'Flix') {
+      url = `${baseSource}?id=${id}`; // Corrected for movies
+    } else if (specialSeriesSourcesMap[source]) {
+      url = `${baseSource}?id=${id}`;
+    } else if (source === 'Source 10 India') {
+      url = `${baseSource}?id=${id}`;
+    } else {
+      url = `${baseSource}/movie/${id}`;
     }
-    return url;
+  } else if (type === 'series') {
+    if (source === 'Brazil') {
+      url = `${baseSource}/serie/${id}/${season}/${episode}`;
+    } else if (source === 'PrimeWire') {
+      url = `${baseSource}/tv?tmdb=${id}&season=${season}&episode=${episode}`;
+    } else if (source === 'Multi') {
+      url = `https://vidsrc.dev/embed/tv/${id}/${season}/${episode}`;
+    } else if (source === 'Flix') {
+      url = `${baseSource}?id=${id}&s=${season}&e=${episode}`; // Corrected for series
+    } else if (specialSeriesSourcesMap[source]) {
+      url = `${specialSeriesSourcesMap[source]}?id=${id}&s=${season}&e=${episode}`;
+    } else if (source === 'Source 10 India') {
+      url = `${baseSource}?id=${id}&s=${season}&e=${episode}`;
+    } else {
+      url = `${baseSource}/tv/${id}/${season}/${episode}`;
+    }
   }
+  return url;
+}
 
   async function getData(_type: MediaType) {
     const req = await fetch(`${import.meta.env.VITE_APP_API}/${_type}/${id}`);
