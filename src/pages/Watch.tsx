@@ -18,72 +18,82 @@ export default function Watch() {
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
   const sources = [
-  { name: 'Braflix', url: 'https://vid.braflix.win/embed' },
-  { name: 'Vidlink', url: 'https://vidlink.pro/' },
-  { name: 'Viaplay', url: 'https://api.vidsrc.win/vid.html' },
-  { name: 'Flix', url: 'https://api.vidsrc.win/rip.html' },
-  { name: 'Hindi HD', url: 'https://api.vidsrc.win/hindi.html' },
-  { name: 'Vidsrc', url: 'https://vidsrc.io/embed' },
-  { name: 'Simple', url: 'https://english.vidsrc.nl/embed' },
-  { name: 'Ghost', url: 'https://api.vidsrc.win/su.html' },
-  { name: 'Pro', url: 'https://vidsrc.pro/embed/' },
-  { name: '2embed', url: 'https://www.2embed.stream/embed/' },
-  { name: 'Autoembed', url: 'https://player.autoembed.cc/embed' },
-  { name: 'PrimeWire', url: 'https://www.primewire.tf/embed' },
-  { name: 'Bomb', url: 'https://flicky.host/embed' }, // Updated Bomb source
-  { name: 'Vidplay', url: 'https://vidsrc.cc/v2/embed' },
-  { name: 'Multi', url: 'https://vidsrc.dev/embed' },
-  { name: 'Source 8 India', url: 'https://api.vidsrc.win/green.html' },
-  { name: 'Source 9 India', url: 'https://api.vidsrc.win/embed.html' },
-  { name: 'Source 10 India', url: 'https://api.vidsrc.win/api.html' },
-  { name: 'Brazil', url: 'https://embed.warezcdn.com' },
-  { name: 'Super', url: 'https://api.vidsrc.win/super.html' },
-];
+    { name: 'Braflix', url: 'https://vid.braflix.win/embed' },
+    { name: 'Vidlink', url: 'https://vidlink.pro/' },
+    { name: 'Viaplay', url: 'https://api.vidsrc.win/vid.html' },
+    { name: 'Flix', url: 'https://api.vidsrc.win/rip.html' },
+    { name: 'Hindi HD', url: 'https://api.vidsrc.win/hindi.html' },
+    { name: 'Vidsrc', url: 'https://vidsrc.io/embed' },
+    { name: 'Simple', url: 'https://english.vidsrc.nl/embed' },
+    { name: 'Ghost', url: 'https://api.vidsrc.win/su.html' },
+    { name: 'Pro', url: 'https://vidsrc.pro/embed/' },
+    { name: '2embed', url: 'https://www.2embed.stream/embed/' },
+    { name: 'Autoembed', url: 'https://player.autoembed.cc/embed' },
+    { name: 'PrimeWire', url: 'https://www.primewire.tf/embed' },
+    { name: 'Bomb', url: 'https://flicky.host/embed' }, // Updated URL
+    { name: 'Vidplay', url: 'https://vidsrc.cc/v2/embed' },
+    { name: 'Multi', url: 'https://vidsrc.dev/embed' },
+    { name: 'Source 8 India', url: 'https://api.vidsrc.win/green.html' },
+    { name: 'Source 9 India', url: 'https://api.vidsrc.win/embed.html' },
+    { name: 'Source 10 India', url: 'https://api.vidsrc.win/api.html' },
+    { name: 'Brazil', url: 'https://embed.warezcdn.com' },
+    { name: 'Super', url: 'https://api.vidsrc.win/super.html' }
+  ];
 
-function getSource() {
-  const baseSource = sources.find(s => s.name === source)?.url;
-  if (!baseSource) return '';
+  const specialSeriesSourcesMap: { [key: string]: string } = {
+    'Source 8 India': 'https://api.vidsrc.win/greentv.html',
+    'Source 9 India': 'https://api.vidsrc.win/embedtv.html',
+    'Viaplay': 'https://api.vidsrc.win/vidtv.html',
+    'Flix': 'https://api.vidsrc.win/riptv.html',
+    'Hindi HD': 'https://api.vidsrc.win/hinditv.html',
+    'Ghost': 'https://api.vidsrc.win/sutv.html',
+    'Super': 'https://api.vidsrc.win/supertv.html'
+  };
 
-  let url;
-  if (type === 'movie') {
-    if (source === 'Bomb') {
-      url = `${baseSource}/movie/?id=${id}`; // New Bomb movie URL format
-    } else if (source === 'Brazil') {
-      url = `${baseSource}/filme/${id}`;
-    } else if (source === 'PrimeWire') {
-      url = `${baseSource}/movie?tmdb=${id}`;
-    } else if (source === 'Multi') {
-      url = `https://vidsrc.dev/embed/movie/${id}`;
-    } else if (source === 'Flix') {
-      url = `${baseSource}?id=${id}`; // Corrected for movies
-    } else if (specialSeriesSourcesMap[source]) {
-      url = `${baseSource}?id=${id}`;
-    } else if (source === 'Source 10 India') {
-      url = `${baseSource}?id=${id}`;
-    } else {
-      url = `${baseSource}/movie/${id}`;
+  const [source, setSource] = useState<string>(
+    localStorage.getItem('selectedSource') || sources[0].name
+  );
+
+  useEffect(() => {
+    if (!localStorage.getItem('selectedSource')) {
+      setSource(sources[0].name);
     }
-  } else if (type === 'series') {
-    if (source === 'Bomb') {
-      url = `${baseSource}/tv/?id=${id}/${season}/${episode}`; // New Bomb series URL format
-    } else if (source === 'Brazil') {
-      url = `${baseSource}/serie/${id}/${season}/${episode}`;
-    } else if (source === 'PrimeWire') {
-      url = `${baseSource}/tv?tmdb=${id}&season=${season}&episode=${episode}`;
-    } else if (source === 'Multi') {
-      url = `https://vidsrc.dev/embed/tv/${id}/${season}/${episode}`;
-    } else if (source === 'Flix') {
-      url = `${baseSource}?id=${id}&s=${season}&e=${episode}`; // Corrected for series
-    } else if (specialSeriesSourcesMap[source]) {
-      url = `${specialSeriesSourcesMap[source]}?id=${id}&s=${season}&e=${episode}`;
-    } else if (source === 'Source 10 India') {
-      url = `${baseSource}?id=${id}&s=${season}&e=${episode}`;
-    } else {
-      url = `${baseSource}/tv/${id}/${season}/${episode}`;
+  }, []);
+
+  function getSource() {
+    const baseSource = sources.find(s => s.name === source)?.url;
+    if (!baseSource) return '';
+
+    let url;
+    if (type === 'movie') {
+      if (source === 'Brazil') {
+        url = `${baseSource}/filme/${id}`;
+      } else if (source === 'PrimeWire') {
+        url = `${baseSource}/movie?tmdb=${id}`;
+      } else if (source === 'Multi') {
+        url = `https://vidsrc.dev/embed/movie/${id}`;
+      } else if (source === 'Bomb') {
+        url = `${baseSource}/movie/?id=${id}`; // Updated logic for movies
+      } else {
+        url = `${baseSource}/movie/${id}`;
+      }
+    } else if (type === 'series') {
+      if (source === 'Brazil') {
+        url = `${baseSource}/serie/${id}/${season}/${episode}`;
+      } else if (source === 'PrimeWire') {
+        url = `${baseSource}/tv?tmdb=${id}&season=${season}&episode=${episode}`;
+      } else if (source === 'Multi') {
+        url = `https://vidsrc.dev/embed/tv/${id}/${season}/${episode}`;
+      } else if (source === 'Bomb') {
+        url = `${baseSource}/tv/?id=${id}/${season}/${episode}`; // Updated logic for series
+      } else if (specialSeriesSourcesMap[source]) {
+        url = `${specialSeriesSourcesMap[source]}?id=${id}&s=${season}&e=${episode}`;
+      } else {
+        url = `${baseSource}/tv/${id}/${season}/${episode}`;
+      }
     }
+    return url;
   }
-  return url;
-}
 
   async function getData(_type: MediaType) {
     const req = await fetch(`${import.meta.env.VITE_APP_API}/${_type}/${id}`);
