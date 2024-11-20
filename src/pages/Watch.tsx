@@ -75,41 +75,44 @@ export default function Watch() {
     localStorage.setItem('viewed', JSON.stringify(viewed));
   }
 
-function getSource() {
-  const baseSource = sources.find(s => s.name === source)?.url;
-  if (!baseSource) return '';
+  function getSource() {
+    const baseSource = sources.find(s => s.name === source)?.url;
+    if (!baseSource) return '';
 
-  const isSpecialSeriesSource = specialSeriesSourcesMap[source];
-  const isMovie = type === 'movie';
-
-  const sourceMap: { [key: string]: (id: string) => string } = {
-    Brazil: (id) => isMovie ? `${baseSource}/filme/${id}` : `${baseSource}/serie/${id}/${season}/${episode}`,
-    PrimeWire: (id) =>
-      isMovie
-        ? `${baseSource}/movie?tmdb=${id}`
-        : `${baseSource}/tv?tmdb=${id}&season=${season}&episode=${episode}`,
-    Multi: (id) =>
-      isMovie
-        ? `https://vidsrc.dev/embed/movie/${id}`
-        : `https://vidsrc.dev/embed/tv/${id}/${season}/${episode}`,
-    Flixy: (id) =>
-      isMovie
-        ? `${baseSource}/movie/?id=${id}`
-        : `${baseSource}/tv/?id=${id}/${season}/${episode}`,
-  };
-
-  // Handle special series sources
-  if (!isMovie && isSpecialSeriesSource) {
-    return `${specialSeriesSourcesMap[source]}?id=${id}&s=${season}&e=${episode}`;
-  }
-
-  // Handle generic cases
-  if (isMovie) {
-    return `${baseSource}/movie/${id}`;
-  } else {
-    return `${baseSource}/tv/${id}/${season}/${episode}`;
-  }
-}
+    let url;
+    if (type === 'movie') {
+      if (source === 'Brazil') {
+        url = `${baseSource}/filme/${id}`;
+      } else if (source === 'PrimeWire') {
+        url = `${baseSource}/movie?tmdb=${id}`;
+      } else if (source === 'Multi') {
+        url = `https://vidsrc.dev/embed/movie/${id}`;
+      } else if (source === 'Flixy') {
+        url = `${baseSource}/movie/?id=${id}`; // Flixy URL structure for movies
+      } else if (specialSeriesSourcesMap[source]) {
+        url = `${baseSource}?id=${id}`;
+      } else if (source === 'Source 10 India') {
+        url = `${baseSource}?id=${id}`;
+      } else {
+        url = `${baseSource}/movie/${id}`;
+      }
+    } else if (type === 'series') {
+      if (source === 'Brazil') {
+        url = `${baseSource}/serie/${id}/${season}/${episode}`;
+      } else if (source === 'PrimeWire') {
+        url = `${baseSource}/tv?tmdb=${id}&season=${season}&episode=${episode}`;
+      } else if (source === 'Multi') {
+        url = `https://vidsrc.dev/embed/tv/${id}/${season}/${episode}`;
+      } else if (source === 'Flixy') {
+        url = `${baseSource}/tv/?id=${id}/${season}/${episode}`; // Flixy URL structure for series
+      } else if (specialSeriesSourcesMap[source]) {
+        url = `${specialSeriesSourcesMap[source]}?id=${id}&s=${season}&e=${episode}`;
+      } else if (source === 'Source 10 India') {
+        url = `${baseSource}?id=${id}&s=${season}&e=${episode}`;
+      } else {
+        url = `${baseSource}/tv/${id}/${season}/${episode}`;
+      }
+    }
     return url;
   }
 
