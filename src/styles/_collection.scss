@@ -1,12 +1,15 @@
 .collections {
   display: flex;
   flex-direction: column;
+
   margin: 85px 0 0;
   padding: 0 60px 30px;
 
   &.overlap {
     position: relative;
+
     margin-top: -10vh;
+
     z-index: 1;
   }
 }
@@ -27,12 +30,15 @@
 
 .collection-slider {
   position: relative;
+
   display: flex;
   flex-direction: row;
   align-items: center;
+
   margin: 15px -60px 0;
   padding: 0 60px;
-  overflow-x: auto; /* Enable horizontal scroll */
+
+  overflow-x: clip;
 }
 
 .collection-cards {
@@ -40,90 +46,43 @@
   flex-direction: row;
   align-items: center;
   column-gap: 15px;
+
   width: 100%;
+
   transition: transform 300ms ease-in-out;
 }
 
-.media-card {
-  position: relative;
+.collection-cards .media-card {
   min-width: calc(16.67% - 13px);
   max-width: calc(16.67% - 13px);
-  transition: transform 300ms ease-in-out;
-
-  &.active {
-    transform: scale(1.05);
-  }
-
-  img {
-    width: 100%;
-    height: auto;
-    display: block;
-    border-radius: 8px;
-  }
-
-  .media-card-actions {
-    position: absolute;
-    bottom: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    padding: 0 10px;
-    z-index: 10;
-
-    .button {
-      background: rgba(0, 0, 0, 0.6);
-      color: white;
-      border: none;
-      padding: 8px;
-      border-radius: 50%;
-      cursor: pointer;
-      transition: background 0.3s;
-
-      &:hover {
-        background: rgba(0, 0, 0, 0.9);
-      }
-
-      i {
-        font-size: 16px;
-      }
-    }
-
-    .secondary {
-      background: rgba(255, 255, 255, 0.6);
-
-      &:hover {
-        background: rgba(255, 255, 255, 0.8);
-      }
-
-      &.right {
-        margin-left: auto;
-      }
-    }
-  }
 }
 
-/* Fix the positioning of arrows */
 .collection-arrow {
-  position: absolute;
-  top: 0;
-  bottom: 0;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+
+  position: absolute;
+
+  top: 0;
+  left: 0;
+
+  height: 100%;
   width: 45px;
+
   background: linear-gradient(to right, rgba(0, 0, 0, 0.7), transparent);
+
   cursor: pointer;
-  z-index: 10; /* Keep the arrows above other content */
+
+  &.right {
+    left: auto;
+    right: 0;
+
+    background: linear-gradient(to left, rgba(0, 0, 0, 0.7), transparent);
+  }
 }
 
-.collection-arrow.right {
-  right: 0;
-  background: linear-gradient(to left, rgba(0, 0, 0, 0.7), transparent);
-}
-
-/* Responsiveness */
 @media (max-width: 1200px) {
   .collection-cards .media-card {
     min-width: calc(20% - 13px);
