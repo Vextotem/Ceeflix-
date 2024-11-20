@@ -47,41 +47,17 @@ export default function Watch() {
     'Flix': 'https://api.vidsrc.win/riptv.html',
     'Hindi HD': 'https://api.vidsrc.win/hinditv.html',
     'Ghost': 'https://api.vidsrc.win/sutv.html',
-    'Super': 'https://api.vidsrc.win/supertv.html'
+    'Super': 'https://api.vidsrc.win/vidtv.html'
   };
 
   const [source, setSource] = useState<string>(
     localStorage.getItem('selectedSource') || sources[0].name
   );
 
-  // Preload all sources when the page loads
-  const preloadSources = async () => {
-    try {
-      const preloadPromises = sources.map((source) => {
-        const url = getSourceForPreloading(source.name);
-        return fetch(url);
-      });
-      await Promise.all(preloadPromises);
-    } catch (error) {
-      console.error("Error preloading sources:", error);
-    }
-  };
-
-  // Determine the correct URL for preloading
-  const getSourceForPreloading = (sourceName: string) => {
-    const baseSource = sources.find(s => s.name === sourceName)?.url;
-    if (!baseSource) return '';
-    
-    if (type === 'movie') {
-      return `${baseSource}/movie/${id}`;
-    } else if (type === 'series') {
-      return `${baseSource}/tv/${id}/${season}/${episode}`;
-    }
-    return '';
-  };
-
   useEffect(() => {
-    preloadSources(); // Preload sources when component is mounted
+    if (!localStorage.getItem('selectedSource')) {
+      setSource(sources[0].name);
+    }
   }, []);
 
   function addViewed(data: MediaShort) {
@@ -184,78 +160,82 @@ export default function Watch() {
     }
     setSeason(parseInt(s));
     setEpisode(parseInt(e));
-    if (me) setSource(me);
     setType('series');
     getData('series');
-    getMaxEpisodes(parseInt(s));
-  }, [search, id]);
+    if (me) {
+      setMaxEpisodes(parseInt(me));
+    } else {
+      getMaxEpisodes(parseInt(s));
+    }
+  }, [id, search]);
 
-  const handleChangeSource = (source: string) => {
-    setSource(source);
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, []);
+
+  useEffect(() => {
+    if (iframeRef.current) {
+      iframeRef.current.onload = () => {
+        const iframeDocument = iframeRef.current?.contentDocument || iframeRef.current?.contentWindow?.document;
+        if (iframeDocument) {
+          const ads = iframeDocument.querySelectorAll('.ad-class, #ad-id');
+          ads.forEach(ad => ad.parentNode?.removeChild(ad));
+        }
+      };
+    }
+  }, [iframeRef.current]);
+
+  useEffect(() => {
     localStorage.setItem('selectedSource', source);
-  };
+  }, [source]);
 
   return (
     <>
       <Helmet>
-        <title>{data?.title} - Watch</title>
+        <title>
+          {data?.title} - {import.meta.env.VITE_APP_NAME}
+        </title>
       </Helmet>
-      <div className="flex flex-col items-center">
-        <h1 className="text-2xl font-bold mb-4">{data?.title}</h1>
-        <div className="w-full mb-4">
-          <iframe
-            ref={iframeRef}
-            src={getSource()}
-            className="w-full h-[500px] border-none"
-            allowFullScreen
-            title={data?.title}
-          />
-        </div>
-        <div className="flex gap-4">
-          {sources.map((sourceItem) => (
-            <button
-              key={sourceItem.name}
-              onClick={() => handleChangeSource(sourceItem.name)}
-              className={`px-4 py-2 rounded ${source === sourceItem.name ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}
-            >
-              {sourceItem.name}
-            </button>
-          ))}
-        </div>
-        <div className="mt-4">
-          {type === 'series' && (
-            <div>
-              <div className="flex gap-2 mb-4">
-                <button
-                  onClick={() => setSeason((prev) => Math.max(1, prev - 1))}
-                  className="px-4 py-2 bg-gray-300 rounded"
-                >
-                  Previous Season
-                </button>
-                <button
-                  onClick={() => setSeason((prev) => Math.min(data?.seasons || 1, prev + 1))}
-                  className="px-4 py-2 bg-gray-300 rounded"
-                >
-                  Next Season
-                </button>
-              </div>
-              <div className="flex gap-2">
-                <button
-                  onClick={() => setEpisode((prev) => Math.max(1, prev - 1))}
-                  className="px-4 py-2 bg-gray-300 rounded"
-                >
-                  Previous Episode
-                </button>
-                <button
-                  onClick={() => setEpisode((prev) => Math.min(maxEpisodes, prev + 1))}
-                  className="px-4 py-2 bg-gray-300 rounded"
-                >
-                  Next Episode
-                </button>
-              </div>
-            </div>
+
+      <div className="player">
+        <div className="player-controls">
+          <i
+            className="fa-regular fa-arrow-left"
+            onClick={() => nav(`/${type}/${id}`)}
+          ></i>
+          {type === 'series' && episode < maxEpisodes && (
+            <i
+              className="fa-regular fa-forward-step right"
+              onClick={() =>
+                nav(
+                  `/watch/${id}?s=${season}&e=${episode + 1}&me=${maxEpisodes}`
+                )
+              }
+            ></i>
           )}
+          <select
+            value={source}
+            onChange={(e) => setSource(e.target.value)}
+          >
+            {sources.map((s, index) => (
+              <option key={index} value={s.name}>
+                {s.name}
+              </option>
+            ))}
+          </select>
         </div>
+        <iframe
+          ref={iframeRef}
+          src={getSource()}
+          width="100%"
+          height="100%"
+          allowFullScreen
+          title="Video Player"
+          referrerPolicy="origin"
+        />
       </div>
     </>
   );
