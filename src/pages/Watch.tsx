@@ -1,4 +1,4 @@
-asimport { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import Movie from '@/types/Movie';
@@ -28,7 +28,6 @@ export default function Watch() {
       { name: '2embed', url: 'https://www.2embed.stream/embed/' },
         { name: 'PrimeWire', url: 'https://www.primewire.tf/embed' },
          { name: 'LimeWire', url: 'https://bombthe.irish/embed/' },
-    { name: 'Flix', url: 'https://api.vidsrc.win/rip.html' },
     { name: 'Hindi HD', url: 'https://api.vidsrc.win/hindi.html' },
     { name: 'Autoembed', url: 'https://player.autoembed.cc/embed' },
     { name: 'Source 8 India', url: 'https://api.vidsrc.win/green.html' },
@@ -42,8 +41,7 @@ export default function Watch() {
   const specialSeriesSourcesMap: { [key: string]: string } = {
     'Source 8 India': 'https://api.vidsrc.win/greentv.html',
     'Source 9 India': 'https://api.vidsrc.win/embedtv.html',
-    'Viaplay': 'https://api.vidsrc.win/vidtv.html',
-    'Flix': 'https://api.vidsrc.win/riptv.html',
+    'Viaplay': 'https://api.vidsrc.win/vidtv.html',    
     'Hindi HD': 'https://api.vidsrc.win/hinditv.html',
     'Super': 'https://api.vidsrc.win/vidtv.html'
   };
