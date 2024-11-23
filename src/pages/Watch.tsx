@@ -35,102 +35,108 @@ export default function Watch() {
     { name: 'India III', url: 'https://api.vidsrc.win/api.html' },
     { name: 'Brazil', url: 'https://embed.warezcdn.com' },
     { name: 'Super', url: 'https://api.vidsrc.win/super.html' },
-    { name: 'Flixy', url: 'https://flicky.host/embed' }
+    { name: 'Flixy', url: 'https://flicky.host/embed' },
   ];
 
   const specialSeriesSourcesMap: { [key: string]: string } = {
     'India I': 'https://api.vidsrc.win/greentv.html',
     'India II': 'https://api.vidsrc.win/embedtv.html',
-    'Viaplay': 'https://api.vidsrc.win/vidtv.html',    
+    Viaplay: 'https://api.vidsrc.win/vidtv.html',
     'Hindi HD': 'https://api.vidsrc.win/hinditv.html',
-    'Super': 'https://api.vidsrc.win/vidtv.html'
+    Super: 'https://api.vidsrc.win/vidtv.html',
   };
 
-const [source, setSource] = useState<string>(() =>
-  localStorage.getItem('selectedSource') || sources[0].name
-);
+  const [source, setSource] = useState<string>(
+    localStorage.getItem('selectedSource') || 'Braflix'
+  );
 
-// Ensure `getSource()` returns the correct URL on the first render.
-function getSource() {
-  const baseSource = sources.find((s) => s.name === source)?.url;
-  if (!baseSource) return '';
+  function getSource() {
+    const baseSource = sources.find((s) => s.name === source)?.url;
+    if (!baseSource) return '';
 
-  let url;
-  if (type === 'movie') {
-    if (source === 'Brazil') {
-      url = `${baseSource}/filme/${id}`;
-    } else if (source === 'PrimeWire') {
-      url = `${baseSource}/movie?tmdb=${id}`;
-    } else if (source === 'Multi') {
-      url = `https://vidsrc.dev/embed/movie/${id}`;
-    } else if (source === 'Flixy') {
-      url = `${baseSource}/movie/?id=${id}`;
-    } else if (specialSeriesSourcesMap[source]) {
-      url = `${baseSource}?id=${id}`;
-    } else if (source === 'India III') {
-      url = `${baseSource}?id=${id}`;
-    } else {
-      url = `${baseSource}/movie/${id}`;
+    let url;
+    if (type === 'movie') {
+      if (source === 'Brazil') {
+        url = `${baseSource}/filme/${id}`;
+      } else if (source === 'PrimeWire') {
+        url = `${baseSource}/movie?tmdb=${id}`;
+      } else if (source === 'Multi') {
+        url = `https://vidsrc.dev/embed/movie/${id}`;
+      } else if (source === 'Flixy') {
+        url = `${baseSource}/movie/?id=${id}`;
+      } else if (specialSeriesSourcesMap[source]) {
+        url = `${baseSource}?id=${id}`;
+      } else if (source === 'India III') {
+        url = `${baseSource}?id=${id}`;
+      } else {
+        url = `${baseSource}/movie/${id}`;
+      }
+    } else if (type === 'series') {
+      if (source === 'Brazil') {
+        url = `${baseSource}/serie/${id}/${season}/${episode}`;
+      } else if (source === 'PrimeWire') {
+        url = `${baseSource}/tv?tmdb=${id}&season=${season}&episode=${episode}`;
+      } else if (source === 'Multi') {
+        url = `https://vidsrc.dev/embed/tv/${id}/${season}/${episode}`;
+      } else if (source === 'Flixy') {
+        url = `${baseSource}/tv/?id=${id}/${season}/${episode}`;
+      } else if (specialSeriesSourcesMap[source]) {
+        url = `${specialSeriesSourcesMap[source]}?id=${id}&s=${season}&e=${episode}`;
+      } else if (source === 'India III') {
+        url = `${baseSource}?id=${id}&s=${season}&e=${episode}`;
+      } else {
+        url = `${baseSource}/tv/${id}/${season}/${episode}`;
+      }
     }
-  } else if (type === 'series') {
-    if (source === 'Brazil') {
-      url = `${baseSource}/serie/${id}/${season}/${episode}`;
-    } else if (source === 'PrimeWire') {
-      url = `${baseSource}/tv?tmdb=${id}&season=${season}&episode=${episode}`;
-    } else if (source === 'Multi') {
-      url = `https://vidsrc.dev/embed/tv/${id}/${season}/${episode}`;
-    } else if (source === 'Flixy') {
-      url = `${baseSource}/tv/?id=${id}/${season}/${episode}`;
-    } else if (specialSeriesSourcesMap[source]) {
-      url = `${specialSeriesSourcesMap[source]}?id=${id}&s=${season}&e=${episode}`;
-    } else if (source === 'India III') {
-      url = `${baseSource}?id=${id}&s=${season}&e=${episode}`;
-    } else {
-      url = `${baseSource}/tv/${id}/${season}/${episode}`;
-    }
+    return url;
   }
-  return url;
-}
 
-return (
-  <>
-    <Helmet>
-      <title>{data?.title} - {import.meta.env.VITE_APP_NAME}</title>
-    </Helmet>
+  return (
+    <>
+      <Helmet>
+        <title>{data?.title} - {import.meta.env.VITE_APP_NAME}</title>
+      </Helmet>
 
-    <div className="player">
-      <div className="player-controls">
-        <i className="fa-regular fa-arrow-left" onClick={() => nav(`/${type}/${id}`)}></i>
-        {type === 'series' && episode < maxEpisodes && (
+      <div className="player">
+        <div className="player-controls">
           <i
-            className="fa-regular fa-forward-step right"
-            onClick={() =>
-              nav(`/watch/${id}?s=${season}&e=${episode + 1}&me=${maxEpisodes}`)
-            }
+            className="fa-regular fa-arrow-left"
+            onClick={() => nav(`/${type}/${id}`)}
           ></i>
-        )}
-        <select
-          value={source}
-          onChange={(e) => setSource(e.target.value)}
-        >
-          {sources.map((s, index) => (
-            <option key={index} value={s.name}>
-              {s.name}
-            </option>
-          ))}
-        </select>
+          {type === 'series' && episode < maxEpisodes && (
+            <i
+              className="fa-regular fa-forward-step right"
+              onClick={() =>
+                nav(`/watch/${id}?s=${season}&e=${episode + 1}&me=${maxEpisodes}`)
+              }
+            ></i>
+          )}
+          <select
+            value={source}
+            onChange={(e) => {
+              const newSource = e.target.value;
+              setSource(newSource);
+              localStorage.setItem('selectedSource', newSource);
+            }}
+          >
+            {sources.map((s, index) => (
+              <option key={index} value={s.name}>
+                {s.name}
+              </option>
+            ))}
+          </select>
+        </div>
+        <iframe
+          key={source}
+          ref={iframeRef}
+          src={getSource()}
+          width="100%"
+          height="100%"
+          allowFullScreen
+          title="Video Player"
+          referrerPolicy="origin"
+        />
       </div>
-      <iframe
-        key={source}
-        ref={iframeRef}
-        src={getSource()}
-        width="100%"
-        height="100%"
-        allowFullScreen
-        title="Video Player"
-        referrerPolicy="origin"
-      />
-    </div>
-  </>
-);
+    </>
+  );
 }
