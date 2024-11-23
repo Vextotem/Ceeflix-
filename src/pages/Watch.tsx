@@ -4,6 +4,7 @@ import { Helmet } from 'react-helmet';
 import Movie from '@/types/Movie';
 import Series from '@/types/Series';
 import MediaType from '@/types/MediaType';
+import MediaShort from '@/types/MediaShort';
 
 export default function Watch() {
   const nav = useNavigate();
@@ -13,6 +14,7 @@ export default function Watch() {
   const [season, setSeason] = useState(1);
   const [episode, setEpisode] = useState(1);
   const [maxEpisodes, setMaxEpisodes] = useState(1);
+  const [data, setData] = useState<Movie | Series>();
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
   const sources = [
@@ -39,64 +41,147 @@ export default function Watch() {
   const specialSeriesSourcesMap: { [key: string]: string } = {
     'India I': 'https://api.vidsrc.win/greentv.html',
     'India II': 'https://api.vidsrc.win/embedtv.html',
-    'Viaplay': 'https://api.vidsrc.win/vidtv.html',
+    'Viaplay': 'https://api.vidsrc.win/vidtv.html',    
     'Hindi HD': 'https://api.vidsrc.win/hinditv.html',
     'Super': 'https://api.vidsrc.win/vidtv.html'
   };
 
-  const [source, setSource] = useState<string>(() => {
-    // Default to 'Braflix' for first-time users
-    const savedSource = localStorage.getItem('selectedSource');
-    return savedSource || 'Braflix';
-  });
+  const [source, setSource] = useState<string>(
+    localStorage.getItem('selectedSource') || sources[0].name
+  );
 
   useEffect(() => {
-    // Save the source to localStorage whenever it changes
-    localStorage.setItem('selectedSource', source);
-  }, [source]);
+    if (!localStorage.getItem('selectedSource')) {
+      setSource(sources[0].name);
+    }
+  }, []);
 
-  const getSource = () => {
-    const baseSource = sources.find((s) => s.name === source)?.url || '';
+  function addViewed(data: MediaShort) {
+    let viewed: MediaShort[] = [];
+    const storage = localStorage.getItem('viewed');
+    if (storage) {
+      viewed = JSON.parse(storage);
+    }
+    const index = viewed.findIndex(v => v.id === data.id && v.type === data.type);
+    if (index !== -1) {
+      viewed.splice(index, 1);
+    }
+    viewed.unshift(data);
+    viewed = viewed.slice(0, 15);
+    localStorage.setItem('viewed', JSON.stringify(viewed));
+  }
+
+  function getSource() {
+    const baseSource = sources.find(s => s.name === source)?.url;
+    if (!baseSource) return '';
+
+    let url;
     if (type === 'movie') {
       if (source === 'Brazil') {
-        return `${baseSource}/filme/${id}`;
+        url = `${baseSource}/filme/${id}`;
       } else if (source === 'PrimeWire') {
-        return `${baseSource}/movie?tmdb=${id}`;
+        url = `${baseSource}/movie?tmdb=${id}`;
       } else if (source === 'Multi') {
-        return `https://vidsrc.dev/embed/movie/${id}`;
+        url = `https://vidsrc.dev/embed/movie/${id}`;
       } else if (source === 'Flixy') {
-        return `${baseSource}/movie/?id=${id}`;
+        url = `${baseSource}/movie/?id=${id}`;
       } else if (specialSeriesSourcesMap[source]) {
-        return `${baseSource}?id=${id}`;
+        url = `${baseSource}?id=${id}`;
       } else if (source === 'India III') {
-        return `${baseSource}?id=${id}`;
+        url = `${baseSource}?id=${id}`;
       } else {
-        return `${baseSource}/movie/${id}`;
+        url = `${baseSource}/movie/${id}`;
       }
     } else if (type === 'series') {
       if (source === 'Brazil') {
-        return `${baseSource}/serie/${id}/${season}/${episode}`;
+        url = `${baseSource}/serie/${id}/${season}/${episode}`;
       } else if (source === 'PrimeWire') {
-        return `${baseSource}/tv?tmdb=${id}&season=${season}&episode=${episode}`;
+        url = `${baseSource}/tv?tmdb=${id}&season=${season}&episode=${episode}`;
       } else if (source === 'Multi') {
-        return `https://vidsrc.dev/embed/tv/${id}/${season}/${episode}`;
+        url = `https://vidsrc.dev/embed/tv/${id}/${season}/${episode}`;
       } else if (source === 'Flixy') {
-        return `${baseSource}/tv/?id=${id}/${season}/${episode}`;
+        url = `${baseSource}/tv/?id=${id}/${season}/${episode}`;
       } else if (specialSeriesSourcesMap[source]) {
-        return `${specialSeriesSourcesMap[source]}?id=${id}&s=${season}&e=${episode}`;
+        url = `${specialSeriesSourcesMap[source]}?id=${id}&s=${season}&e=${episode}`;
       } else if (source === 'India III') {
-        return `${baseSource}?id=${id}&s=${season}&e=${episode}`;
+        url = `${baseSource}?id=${id}&s=${season}&e=${episode}`;
       } else {
-        return `${baseSource}/tv/${id}/${season}/${episode}`;
+        url = `${baseSource}/tv/${id}/${season}/${episode}`;
       }
     }
-    return '';
-  };
+    return url;
+  }
+
+  async function getData(_type: MediaType) {
+    const req = await fetch(`${import.meta.env.VITE_APP_API}/${_type}/${id}`);
+    const res = await req.json();
+    if (!res.success) return;
+
+    const data: Movie | Series = res.data;
+    setData(data);
+    addViewed({
+      id: data.id,
+      poster: data.images.poster,
+      title: data.title,
+      type: _type,
+    });
+  }
+
+  async function getMaxEpisodes(season: number) {
+    const req = await fetch(`${import.meta.env.VITE_APP_API}/episodes/${id}?s=${season}`);
+    const res = await req.json();
+    if (!res.success) {
+      nav('/');
+      return;
+    }
+    setMaxEpisodes(res.data.length);
+  }
+
+  useEffect(() => {
+    if (!data) return;
+    if (!('seasons' in data)) return;
+    if (season > data.seasons || episode > maxEpisodes) {
+      nav('/');
+    }
+  }, [data, maxEpisodes]);
+
+  useEffect(() => {
+    const s = search.get('s');
+    const e = search.get('e');
+    const me = search.get('me');
+    if (!s || !e) {
+      setType('movie');
+      getData('movie');
+      return;
+    }
+    setSeason(parseInt(s));
+    setEpisode(parseInt(e));
+    setType('series');
+    getData('series');
+    if (me) {
+      setMaxEpisodes(parseInt(me));
+    } else {
+      getMaxEpisodes(parseInt(s));
+    }
+  }, [id, search]);
+
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('selectedSource', source);
+  }, [source]);
 
   return (
     <>
       <Helmet>
-        <title>Watch - {import.meta.env.VITE_APP_NAME || 'My App'}</title>
+        <title>
+          {data?.title} - {import.meta.env.VITE_APP_NAME}
+        </title>
       </Helmet>
 
       <div className="player">
@@ -109,7 +194,9 @@ export default function Watch() {
             <i
               className="fa-regular fa-forward-step right"
               onClick={() =>
-                nav(`/watch/${id}?s=${season}&e=${episode + 1}&me=${maxEpisodes}`)
+                nav(
+                  `/watch/${id}?s=${season}&e=${episode + 1}&me=${maxEpisodes}`
+                )
               }
             ></i>
           )}
