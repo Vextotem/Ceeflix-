@@ -37,7 +37,7 @@ export default function Watch() {
   { name: 'Brazil', url: 'https://embed.warezcdn.com' },
   { name: 'Super', url: 'https://api.vidsrc.win/super.html' },
   { name: 'Flixy', url: 'https://flicky.host/embed' },
-  { name: 'Bomb', url: 'https://Bombthe.irish/embed' }, // Added Bomb source
+  { name: 'BombTheIrish', url: 'https://bombthe.irish/embed' }, // Added BombTheIrish source
 ];
 
 function getSource() {
@@ -54,8 +54,8 @@ function getSource() {
       url = `https://vidsrc.dev/embed/movie/${id}`;
     } else if (source === 'Flixy') {
       url = `${baseSource}/movie/?id=${id}`;
-    } else if (source === 'Bomb') {
-      url = `${baseSource}/movie/${id}`; // Bomb URL structure for movies
+    } else if (source === 'BombTheIrish') {
+      url = `${baseSource}/movie/${id}`; // BombTheIrish URL structure for movies
     } else if (specialSeriesSourcesMap[source]) {
       url = `${baseSource}?id=${id}`;
     } else if (source === 'Source 10 India') {
@@ -72,8 +72,8 @@ function getSource() {
       url = `https://vidsrc.dev/embed/tv/${id}/${season}/${episode}`;
     } else if (source === 'Flixy') {
       url = `${baseSource}/tv/?id=${id}/${season}/${episode}`;
-    } else if (source === 'Bomb') {
-      url = `${baseSource}/tv/${id}/${season}/${episode}`; // Bomb URL structure for series
+    } else if (source === 'BombTheIrish') {
+      url = `${baseSource}/tv/${id}/${season}/${episode}`; // BombTheIrish URL structure for series
     } else if (specialSeriesSourcesMap[source]) {
       url = `${specialSeriesSourcesMap[source]}?id=${id}&s=${season}&e=${episode}`;
     } else if (source === 'Source 10 India') {
