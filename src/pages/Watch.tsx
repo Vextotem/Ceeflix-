@@ -20,14 +20,14 @@ export default function Watch() {
   const sources = [
     { name: 'Braflix', url: 'https://vid.braflix.win/embed' },
     { name: 'Vidlink', url: 'https://vidlink.pro/' },
-     { name: 'Multi', url: 'https://vidsrc.dev/embed' },
+    { name: 'Multi', url: 'https://vidsrc.dev/embed' },
     { name: 'Viaplay', url: 'https://api.vidsrc.win/vid.html' },
     { name: 'Vidplay', url: 'https://vidsrc.cc/v2/embed' },
-     { name: 'Pro', url: 'https://vidsrc.pro/embed/' },
-     { name: 'Vidsrc', url: 'https://vidsrc.io/embed' },
-      { name: '2embed', url: 'https://www.2embed.stream/embed/' },
-        { name: 'PrimeWire', url: 'https://www.primewire.tf/embed' },
-         { name: 'LimeWire', url: 'https://bombthe.irish/embed/' },
+    { name: 'Pro', url: 'https://vidsrc.pro/embed/' },
+    { name: 'Vidsrc', url: 'https://vidsrc.io/embed' },
+    { name: '2embed', url: 'https://www.2embed.stream/embed/' },
+    { name: 'PrimeWire', url: 'https://www.primewire.tf/embed' },
+    { name: 'LimeWire', url: 'https://bombthe.irish/embed/' },
     { name: 'Hindi HD', url: 'https://api.vidsrc.win/hindi.html' },
     { name: 'Autoembed', url: 'https://player.autoembed.cc/embed' },
     { name: 'Source 8 India', url: 'https://api.vidsrc.win/green.html' },
@@ -35,7 +35,7 @@ export default function Watch() {
     { name: 'Source 10 India', url: 'https://api.vidsrc.win/api.html' },
     { name: 'Brazil', url: 'https://embed.warezcdn.com' },
     { name: 'Super', url: 'https://api.vidsrc.win/super.html' },
-    { name: 'Flixy', url: 'https://flicky.host/embed' } // Added Flixy source
+    { name: 'Flixy', url: 'https://flicky.host/embed' }
   ];
 
   const specialSeriesSourcesMap: { [key: string]: string } = {
@@ -84,7 +84,7 @@ export default function Watch() {
       } else if (source === 'Multi') {
         url = `https://vidsrc.dev/embed/movie/${id}`;
       } else if (source === 'Flixy') {
-        url = `${baseSource}/movie/?id=${id}`; // Flixy URL structure for movies
+        url = `${baseSource}/movie/?id=${id}`;
       } else if (specialSeriesSourcesMap[source]) {
         url = `${baseSource}?id=${id}`;
       } else if (source === 'Source 10 India') {
@@ -100,7 +100,7 @@ export default function Watch() {
       } else if (source === 'Multi') {
         url = `https://vidsrc.dev/embed/tv/${id}/${season}/${episode}`;
       } else if (source === 'Flixy') {
-        url = `${baseSource}/tv/?id=${id}/${season}/${episode}`; // Flixy URL structure for series
+        url = `${baseSource}/tv/?id=${id}/${season}/${episode}`;
       } else if (specialSeriesSourcesMap[source]) {
         url = `${specialSeriesSourcesMap[source]}?id=${id}&s=${season}&e=${episode}`;
       } else if (source === 'Source 10 India') {
@@ -171,18 +171,6 @@ export default function Watch() {
       document.body.style.overflow = 'auto';
     };
   }, []);
-
-  useEffect(() => {
-    if (iframeRef.current) {
-      iframeRef.current.onload = () => {
-        const iframeDocument = iframeRef.current?.contentDocument || iframeRef.current?.contentWindow?.document;
-        if (iframeDocument) {
-          const ads = iframeDocument.querySelectorAll('.ad-class, #ad-id');
-          ads.forEach(ad => ad.parentNode?.removeChild(ad));
-        }
-      };
-    }
-  }, [iframeRef.current]);
 
   useEffect(() => {
     localStorage.setItem('selectedSource', source);
