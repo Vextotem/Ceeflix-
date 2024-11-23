@@ -30,7 +30,6 @@ export default function Watch() {
          { name: 'LimeWire', url: 'https://bombthe.irish/embed/' },
     { name: 'Flix', url: 'https://api.vidsrc.win/rip.html' },
     { name: 'Hindi HD', url: 'https://api.vidsrc.win/hindi.html' },
-    { name: 'Ghost', url: 'https://api.vidsrc.win/su.html' },
     { name: 'Autoembed', url: 'https://player.autoembed.cc/embed' },
     { name: 'Source 8 India', url: 'https://api.vidsrc.win/green.html' },
     { name: 'Source 9 India', url: 'https://api.vidsrc.win/embed.html' },
@@ -46,7 +45,6 @@ export default function Watch() {
     'Viaplay': 'https://api.vidsrc.win/vidtv.html',
     'Flix': 'https://api.vidsrc.win/riptv.html',
     'Hindi HD': 'https://api.vidsrc.win/hinditv.html',
-    'Ghost': 'https://api.vidsrc.win/sutv.html',
     'Super': 'https://api.vidsrc.win/vidtv.html'
   };
 
