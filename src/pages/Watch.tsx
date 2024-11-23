@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+asimport { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import Movie from '@/types/Movie';
