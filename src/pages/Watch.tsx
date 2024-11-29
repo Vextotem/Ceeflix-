@@ -80,9 +80,8 @@ export default function Watch() {
   }
 
   function getSpecialUrl(sourceName: string, id: string, season?: number, episode?: number): string {
-    const specialSource = specialSeriesSourcesMap[sourceName] || sources.find(s => s.name === sourceName)?.url;
-    if (!specialSource) return '';
-
+    const specialSource = specialSeriesSourcesMap[sourceName] || sources.find(s => s.name === sourceName)?.url || '';
+    
     if (season && episode) {
       return `${specialSource}?id=${id}&s=${season}&e=${episode}`;
     }
@@ -90,29 +89,29 @@ export default function Watch() {
   }
 
   const getSource = useCallback(() => {
-    const baseSource = sources.find(s => s.name === source)?.url;
+    const baseSource = sources.find(s => s.name === source)?.url || '';
     if (!baseSource) return '';
 
     switch (source) {
       case 'Brazil':
-        return buildUrl(baseSource, id, season, episode);
+        return buildUrl(baseSource, id ?? '');
       case 'PrimeWire':
         return type === 'movie' 
-          ? `${baseSource}/movie?tmdb=${id}`
-          : `${baseSource}/tv?tmdb=${id}&season=${season}&episode=${episode}`;
+          ? `${baseSource}/movie?tmdb=${id ?? ''}`
+          : `${baseSource}/tv?tmdb=${id ?? ''}&season=${season ?? 1}&episode=${episode ?? 1}`;
       case 'Multi':
-        return buildUrl('https://vidsrc.dev/embed', id, season, episode);
+        return buildUrl('https://vidsrc.dev/embed', id ?? '');
       case 'Flixy':
         return type === 'movie' 
-          ? `${baseSource}/movie/?id=${id}`
-          : `${baseSource}/tv/?id=${id}/${season}/${episode}`;
+          ? `${baseSource}/movie/?id=${id ?? ''}`
+          : `${baseSource}/tv/?id=${id ?? ''}/${season ?? 1}/${episode ?? 1}`;
       case 'India III':
-        return getSpecialUrl(source, id, season, episode);
+        return getSpecialUrl(source, id ?? '', season, episode);
       default:
         if (Object.keys(specialSeriesSourcesMap).includes(source)) {
-          return getSpecialUrl(source, id, season, episode);
+          return getSpecialUrl(source, id ?? '', season, episode);
         }
-        return buildUrl(baseSource, id, season, episode);
+        return buildUrl(baseSource, id ?? '', season, episode);
     }
   }, [type, source, id, season, episode]);
 
