@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import Movie from '@/types/Movie';
@@ -71,46 +71,50 @@ export default function Watch() {
     localStorage.setItem('viewed', JSON.stringify(viewed));
   }
 
-  function getSource() {
+  function buildUrl(baseUrl: string, id: string, season?: number, episode?: number): string {
+    if (season && episode) {
+      return `${baseUrl}/tv/${id}/${season}/${episode}`;
+    } else {
+      return `${baseUrl}/movie/${id}`;
+    }
+  }
+
+  function getSpecialUrl(sourceName: string, id: string, season?: number, episode?: number): string {
+    const specialSource = specialSeriesSourcesMap[sourceName] || sources.find(s => s.name === sourceName)?.url;
+    if (!specialSource) return '';
+
+    if (season && episode) {
+      return `${specialSource}?id=${id}&s=${season}&e=${episode}`;
+    }
+    return `${specialSource}?id=${id}`;
+  }
+
+  const getSource = useCallback(() => {
     const baseSource = sources.find(s => s.name === source)?.url;
     if (!baseSource) return '';
 
-    let url;
-    if (type === 'movie') {
-      if (source === 'Brazil') {
-        url = `${baseSource}/filme/${id}`;
-      } else if (source === 'PrimeWire') {
-        url = `${baseSource}/movie?tmdb=${id}`;
-      } else if (source === 'Multi') {
-        url = `https://vidsrc.dev/embed/movie/${id}`;
-      } else if (source === 'Flixy') {
-        url = `${baseSource}/movie/?id=${id}`;
-      } else if (specialSeriesSourcesMap[source]) {
-        url = `${baseSource}?id=${id}`;
-      } else if (source === 'India III') {
-        url = `${baseSource}?id=${id}`;
-      } else {
-        url = `${baseSource}/movie/${id}`;
-      }
-    } else if (type === 'series') {
-      if (source === 'Brazil') {
-        url = `${baseSource}/serie/${id}/${season}/${episode}`;
-      } else if (source === 'PrimeWire') {
-        url = `${baseSource}/tv?tmdb=${id}&season=${season}&episode=${episode}`;
-      } else if (source === 'Multi') {
-        url = `https://vidsrc.dev/embed/tv/${id}/${season}/${episode}`;
-      } else if (source === 'Flixy') {
-        url = `${baseSource}/tv/?id=${id}/${season}/${episode}`;
-      } else if (specialSeriesSourcesMap[source]) {
-        url = `${specialSeriesSourcesMap[source]}?id=${id}&s=${season}&e=${episode}`;
-      } else if (source === 'India III') {
-        url = `${baseSource}?id=${id}&s=${season}&e=${episode}`;
-      } else {
-        url = `${baseSource}/tv/${id}/${season}/${episode}`;
-      }
+    switch (source) {
+      case 'Brazil':
+        return buildUrl(baseSource, id, season, episode);
+      case 'PrimeWire':
+        return type === 'movie' 
+          ? `${baseSource}/movie?tmdb=${id}`
+          : `${baseSource}/tv?tmdb=${id}&season=${season}&episode=${episode}`;
+      case 'Multi':
+        return buildUrl('https://vidsrc.dev/embed', id, season, episode);
+      case 'Flixy':
+        return type === 'movie' 
+          ? `${baseSource}/movie/?id=${id}`
+          : `${baseSource}/tv/?id=${id}/${season}/${episode}`;
+      case 'India III':
+        return getSpecialUrl(source, id, season, episode);
+      default:
+        if (Object.keys(specialSeriesSourcesMap).includes(source)) {
+          return getSpecialUrl(source, id, season, episode);
+        }
+        return buildUrl(baseSource, id, season, episode);
     }
-    return url;
-  }
+  }, [type, source, id, season, episode]);
 
   async function getData(_type: MediaType) {
     const req = await fetch(`${import.meta.env.VITE_APP_API}/${_type}/${id}`);
@@ -173,7 +177,9 @@ export default function Watch() {
   }, []);
 
   useEffect(() => {
-    localStorage.setItem('selectedSource', source);
+    if (source !== localStorage.getItem('selectedSource')) {
+      localStorage.setItem('selectedSource', source);
+    }
   }, [source]);
 
   return (
