@@ -4,10 +4,13 @@ import CollectionT from '@/types/Collection';
 import Card from './Card';
 
 export default function Collection({ title, items }: CollectionT) {
-  const card = useRef<HTMLAnchorElement>(null);
+  const cardRef = useRef<HTMLAnchorElement>(null);
   const cardsContainerRef = useRef<HTMLDivElement>(null);
   const [index, setIndex] = useState(0);
   const [indexMax, setIndexMax] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [scrollLeft, setScrollLeft] = useState(0);
 
   function onBack() {
     if (index <= 0) return;
@@ -24,8 +27,8 @@ export default function Collection({ title, items }: CollectionT) {
   }
 
   function scrollToIndex(newIndex: number) {
-    if (!cardsContainerRef.current || !card.current) return;
-    const cardWidth = card.current.clientWidth + 15; // Include the margin or spacing
+    if (!cardsContainerRef.current || !cardRef.current) return;
+    const cardWidth = cardRef.current.clientWidth + 15; // Include the margin or spacing
     const scrollPos = newIndex * cardWidth;
     cardsContainerRef.current.scrollTo({
       left: scrollPos,
@@ -34,24 +37,64 @@ export default function Collection({ title, items }: CollectionT) {
   }
 
   function onResize() {
-    if (!card.current) return;
-    const el = card.current;
+    if (!cardRef.current) return;
+    const el = cardRef.current;
     const cardWidth = el.clientWidth + 15;
     const sliderWidth = window.innerWidth - 120;
     const cardsCount = items.length;
     const cardsVisible = Math.floor(sliderWidth / cardWidth);
-    const indexMax = cardsCount - cardsVisible;
-    setIndexMax(indexMax - 1);
+    const newIndexMax = Math.max(0, cardsCount - cardsVisible);
+    setIndexMax(newIndexMax);
+    if (index > newIndexMax) setIndex(newIndexMax);
   }
 
   useEffect(() => {
-    if (!card.current) return;
+    if (!cardRef.current) return;
     onResize();
     window.addEventListener('resize', onResize);
     return () => {
       window.removeEventListener('resize', onResize);
     };
-  }, [card]);
+  }, []);
+
+  useEffect(() => {
+    const container = cardsContainerRef.current;
+    if (!container) return;
+
+    const onMouseDown = (e: MouseEvent) => {
+      setIsDragging(true);
+      setStartX(e.pageX - container.offsetLeft);
+      setScrollLeft(container.scrollLeft);
+    };
+
+    const onMouseLeave = () => {
+      setIsDragging(false);
+    };
+
+    const onMouseUp = () => {
+      setIsDragging(false);
+    };
+
+    const onMouseMove = (e: MouseEvent) => {
+      if (!isDragging) return;
+      e.preventDefault();
+      const x = e.pageX - container.offsetLeft;
+      const walk = (x - startX) * 2; // Adjust this for scroll speed
+      container.scrollLeft = scrollLeft - walk;
+    };
+
+    container.addEventListener('mousedown', onMouseDown);
+    container.addEventListener('mouseleave', onMouseLeave);
+    container.addEventListener('mouseup', onMouseUp);
+    container.addEventListener('mousemove', onMouseMove);
+
+    return () => {
+      container.removeEventListener('mousedown', onMouseDown);
+      container.removeEventListener('mouseleave', onMouseLeave);
+      container.removeEventListener('mouseup', onMouseUp);
+      container.removeEventListener('mousemove', onMouseMove);
+    };
+  }, [isDragging, startX, scrollLeft]);
 
   return (
     <div className="collection">
@@ -72,10 +115,11 @@ export default function Collection({ title, items }: CollectionT) {
             display: 'flex',
             overflowX: 'auto', // Allow horizontal scrolling
             scrollBehavior: 'smooth', // Smooth scroll when using scrollTo
+            cursor: isDragging ? 'grabbing' : 'grab', // Change cursor based on dragging state
           }}
         >
           {items.map((item, i) => {
-            return <Card key={i} Ref={i === 0 ? card : undefined} {...item} />;
+            return <Card key={i} Ref={i === 0 ? cardRef : undefined} {...item} />;
           })}
         </div>
 
