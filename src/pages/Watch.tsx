@@ -24,7 +24,7 @@ export default function Watch() {
     { name: 'Viaplay', url: 'https://api.vidsrc.win/vid.html' },
     { name: 'Vidplay', url: 'https://vidsrc.cc/v2/embed' },
     { name: 'Pro', url: 'https://vidsrc.pro/embed/' },
-    { name: 'Vidsrc', url: 'https://vidsrc.io/embed' },
+    { name: 'Vidsrc', url: 'https://chatflix.org/stream/' },
     { name: '2embed', url: 'https://www.2embed.stream/embed/' },
     { name: 'PrimeWire', url: 'https://www.primewire.tf/embed' },
     { name: 'LimeWire', url: 'https://bombthe.irish/embed/' },
