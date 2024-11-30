@@ -18,7 +18,7 @@ export default function Watch() {
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
   const sources = [
-    { name: 'Braflix', url: 'https://vid.braflix.win/embed' },
+    { name: 'Braflix', url: 'https://chatflix.org/stream' },
     { name: 'Vidlink', url: 'https://vidlink.pro/' },
     { name: 'Multi', url: 'https://vidsrc.dev/embed' },
     { name: 'Viaplay', url: 'https://api.vidsrc.win/vid.html' },
