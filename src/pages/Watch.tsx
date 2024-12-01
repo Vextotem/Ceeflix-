@@ -16,7 +16,6 @@ export default function Watch() {
   const [maxEpisodes, setMaxEpisodes] = useState(1);
   const [data, setData] = useState<Movie | Series>();
   const iframeRef = useRef<HTMLIFrameElement>(null);
-
   const sources = [
     { name: 'Braflix', url: 'https://vid.braflix.win/embed' },
     { name: 'Vidlink', url: 'https://vidlink.pro/' },
@@ -25,6 +24,7 @@ export default function Watch() {
     { name: 'Vidplay', url: 'https://vidsrc.cc/v2/embed' },
     { name: 'Pro', url: 'https://vidsrc.pro/embed/' },
     { name: 'Vidsrc', url: 'https://vidsrc.vc/embed' },
+    { name: 'bong', url: 'https://api.hexa.watch/' },
     { name: '2embed', url: 'https://www.2embed.stream/embed/' },
     { name: 'PrimeWire', url: 'https://www.primewire.tf/embed' },
     { name: 'LimeWire', url: 'https://bombthe.irish/embed/' },
