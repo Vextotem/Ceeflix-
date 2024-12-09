@@ -16,6 +16,7 @@ export default function Watch() {
   const [maxEpisodes, setMaxEpisodes] = useState(1);
   const [data, setData] = useState<Movie | Series>();
   const iframeRef = useRef<HTMLIFrameElement>(null);
+
   const sources = [
     { name: 'Braflix', url: 'https://vid.braflix.win/embed' },
     { name: 'Vidlink', url: 'https://vidlink.pro/' },
@@ -23,8 +24,7 @@ export default function Watch() {
     { name: 'Viaplay', url: 'https://www.rgshows.me/player/movies/api2/index.html' },
     { name: 'Vidplay', url: 'https://vidsrc.cc/v2/embed' },
     { name: 'Pro', url: 'https://vidsrc.pro/embed/' },
-    { name: 'Vidsrc', url: 'https://vidsrc.vc/embed' },
-    { name: 'View', url: 'https://chatflix.org/stream/' },
+    { name: 'Vidsrc', url: 'https://vidsrc.io/embed' },
     { name: '2embed', url: 'https://www.2embed.stream/embed/' },
     { name: 'PrimeWire', url: 'https://www.primewire.tf/embed' },
     { name: 'LimeWire', url: 'https://bombthe.irish/embed/' },
@@ -41,7 +41,7 @@ export default function Watch() {
   const specialSeriesSourcesMap: { [key: string]: string } = {
     'India I': 'https://api.vidsrc.win/greentv.html',
     'India II': 'https://api.vidsrc.win/embedtv.html',
-    'Viaplay': 'https://www.rgshows.me/player/movies/api2/index.html',    
+    'Viaplay': 'https://rgshows.me/player/series/api2/index.html',    
     'Hindi HD': 'https://api.vidsrc.win/hinditv.html',
     'Super': 'https://api.vidsrc.win/vidtv.html'
   };
