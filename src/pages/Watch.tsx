@@ -40,12 +40,13 @@ export default function Watch() {
   ];
 
   const specialSeriesSourcesMap: { [key: string]: string } = {
-    'India I': 'https://api.vidsrc.win/greentv.html',
-    'India II': 'https://api.vidsrc.win/embedtv.html',
-    'Viaplay': 'https://rgshows.me/player/series/api2/index.html',    
-    'Hindi HD': 'https://api.vidsrc.win/hinditv.html',
-    'Super': 'https://api.vidsrc.win/vidtv.html'
-  };
+  'India I': 'https://api.vidsrc.win/greentv.html',
+  'India II': 'https://api.vidsrc.win/embedtv.html',
+  'Viaplay': 'https://rgshows.me/player/series/api2/index.html',
+  'Hindi HD': 'https://api.vidsrc.win/hinditv.html',
+  'Super': 'https://api.vidsrc.win/vidtv.html',
+  'Club': 'https://moviesapi.club/tv',
+};
 
   const [source, setSource] = useState<string>(
     localStorage.getItem('selectedSource') || sources[0].name
