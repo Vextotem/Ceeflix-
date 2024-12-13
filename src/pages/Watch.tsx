@@ -40,13 +40,12 @@ export default function Watch() {
   ];
 
   const specialSeriesSourcesMap: { [key: string]: string } = {
-  'India I': 'https://api.vidsrc.win/greentv.html',
-  'India II': 'https://api.vidsrc.win/embedtv.html',
-  'Viaplay': 'https://rgshows.me/player/series/api2/index.html',
-  'Hindi HD': 'https://api.vidsrc.win/hinditv.html',
-  'Super': 'https://api.vidsrc.win/vidtv.html',
-  'Club': 'https://moviesapi.club/tv',
-};
+    'India I': 'https://api.vidsrc.win/greentv.html',
+    'India II': 'https://api.vidsrc.win/embedtv.html',
+    'Viaplay': 'https://rgshows.me/player/series/api2/index.html',    
+    'Hindi HD': 'https://api.vidsrc.win/hinditv.html',
+    'Super': 'https://api.vidsrc.win/vidtv.html'
+  };
 
   const [source, setSource] = useState<string>(
     localStorage.getItem('selectedSource') || sources[0].name
@@ -101,6 +100,8 @@ export default function Watch() {
         url = `${baseSource}/tv?tmdb=${id}&season=${season}&episode=${episode}`;
       } else if (source === 'Multi') {
         url = `https://vidsrc.dev/embed/tv/${id}/${season}/${episode}`;
+        else if (source === 'Club') {
+    url = `${baseSource}/tv/${id}-${season}-${episode}`;
       } else if (source === 'Flixy') {
         url = `${baseSource}/tv/?id=${id}/${season}/${episode}`;
       } else if (specialSeriesSourcesMap[source]) {
