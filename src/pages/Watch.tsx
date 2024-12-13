@@ -28,6 +28,7 @@ export default function Watch() {
     { name: '2embed', url: 'https://www.2embed.stream/embed/' },
     { name: 'PrimeWire', url: 'https://www.primewire.tf/embed' },
     { name: 'LimeWire', url: 'https://bombthe.irish/embed/' },
+      { name: 'Club', url: 'https://moviesapi.club/' },
     { name: 'Hindi HD', url: 'https://api.vidsrc.win/hindi.html' },
     { name: 'Autoembed', url: 'https://player.autoembed.cc/embed' },
     { name: 'India I', url: 'https://api.vidsrc.win/green.html' },
