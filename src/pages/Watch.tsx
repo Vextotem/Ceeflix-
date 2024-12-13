@@ -93,25 +93,25 @@ export default function Watch() {
       } else {
         url = `${baseSource}/movie/${id}`;
       }
-    } else if (type === 'series') {
-      if (source === 'Brazil') {
-        url = `${baseSource}/serie/${id}/${season}/${episode}`;
-      } else if (source === 'PrimeWire') {
-        url = `${baseSource}/tv?tmdb=${id}&season=${season}&episode=${episode}`;
-      } else if (source === 'Multi') {
-        url = `https://vidsrc.dev/embed/tv/${id}/${season}/${episode}`;
-        else if (source === 'Club') {
-    url = `${baseSource}/tv/${id}-${season}-${episode}`;
-      } else if (source === 'Flixy') {
-        url = `${baseSource}/tv/?id=${id}/${season}/${episode}`;
-      } else if (specialSeriesSourcesMap[source]) {
-        url = `${specialSeriesSourcesMap[source]}?id=${id}&s=${season}&e=${episode}`;
-      } else if (source === 'India III') {
-        url = `${baseSource}?id=${id}&s=${season}&e=${episode}`;
-      } else {
-        url = `${baseSource}/tv/${id}/${season}/${episode}`;
-      }
-    }
+    } } else if (type === 'series') {
+  if (source === 'Brazil') {
+    url = `${baseSource}/serie/${id}/${season}/${episode}`;
+  } else if (source === 'PrimeWire') {
+    url = `${baseSource}/tv?tmdb=${id}&season=${season}&episode=${episode}`;
+  } else if (source === 'Multi') {
+    url = `https://vidsrc.dev/embed/tv/${id}/${season}/${episode}`;
+  } else if (source === 'Flixy') {
+    url = `${baseSource}/tv/?id=${id}/${season}/${episode}`;
+  } else if (source === 'Club') {
+    url = `${baseSource}/tv/${id}-${season}-${episode}`; // Fixed Club series format
+  } else if (specialSeriesSourcesMap[source]) {
+    url = `${specialSeriesSourcesMap[source]}?id=${id}&s=${season}&e=${episode}`;
+  } else if (source === 'India III') {
+    url = `${baseSource}?id=${id}&s=${season}&e=${episode}`;
+  } else {
+    url = `${baseSource}/tv/${id}/${season}/${episode}`;
+  }
+}
     return url;
   }
 
