@@ -85,7 +85,9 @@ export default function Nav() {
         <NavLink to="/series">Series</NavLink>
         <NavLink to="/list">My List</NavLink>
         
-       
+        {/* External link to Anime site */}
+        <a href="https://externalanime.site" target="_blank" rel="noopener noreferrer">Anime</a>
+
         <NavLink className="mobile" to="/movies">
           <i className="fa-solid fa-film"></i>
         </NavLink>
