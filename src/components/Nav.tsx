@@ -85,33 +85,33 @@ export default function Nav() {
         <NavLink to="/series">Series</NavLink>
         <NavLink to="/list">My List</NavLink>
         
-        {/* External link to Anime site */}
-        <a href="https://externalanime.site" target="_blank" rel="noopener noreferrer">Anime</a>
-
+       
         <NavLink className="mobile" to="/movies">
-          <i className="fa-regular fa-film"></i>
+          <i className="fa-solid fa-film"></i>
         </NavLink>
 
         <NavLink className="mobile" to="/series">
-          <i className="fa-regular fa-tv"></i>
+          <i className="fa-solid fa-tv"></i>
         </NavLink>
 
         <NavLink className="mobile" to="/list">
-          <i className="fa-regular fa-list"></i>
+          <i className="fa-solid fa-list"></i>
         </NavLink>
       </div>
 
       <div className="top-bar-search" ref={wrapperRef}>
         {searching ? (
           <div className="top-bar-input">
-            <i className="fa-regular fa-search"></i>
+            <i className="fa-solid fa-search"></i>
 
             <input type="text" ref={inputRef} value={search} placeholder="Search for a title" onChange={onSearchChange} />
           </div>
         ) : (
-          <i className="fa-regular fa-search action" onClick={onSearchClick}></i>
+          <i className="fa-solid fa-search action" onClick={onSearchClick}></i>
         )}
       </div>
     </div>
+  );
+}>
   );
 }
