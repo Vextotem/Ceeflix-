@@ -20,6 +20,7 @@ export default function Watch() {
   const sources = [
     { name: 'Braflix', url: 'https://api.braflix.win/embed' },
     { name: 'Vidlink', url: 'https://vidlink.pro/' },
+     { name: 'Português', url: 'https://filmesapi.pro/embed/' },
     { name: 'Multi', url: 'https://vidsrc.dev/embed' },
     { name: 'Viaplay', url: 'https://www.rgshows.me/player/movies/api2/index.html' },
     { name: 'Vidplay', url: 'https://vidsrc.cc/v2/embed' },
