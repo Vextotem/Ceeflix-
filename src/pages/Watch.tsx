@@ -44,7 +44,7 @@ export default function Watch() {
   ];
 
   const specialSeriesSourcesMap: { [key: string]: string } = {
-    'India I': 'https://api.vidsrc.win/greentv.html',
+    'India I': 'https://api.vidsrc.win/saysutv.html',
     'India II': 'https://api.vidsrc.win/embedtv.html',
     'Viaplay': 'https://rgshows.me/player/series/api2/index.html',
     'Hindi HD': 'https://api.vidsrc.win/hinditv.html',
