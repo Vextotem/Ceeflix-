@@ -29,7 +29,7 @@ export default function Watch() {
       { name: 'Kex', url: 'https://moviekex.online/embed/' },
       { name: 'VIP', url: 'https://vidsrc.vip/embed/' },
     { name: 'PrimeWire', url: 'https://www.primewire.tf/embed' },
-    { name: 'Vidjoy', url: 'https://vidjoy.pro/embed' },
+    { name: 'LimeWire', url: 'https://vidjoy.pro/embed' },
     { name: 'Club', url: 'https://moviesapi.club/' },
       { name: '111Movies', url: 'https://111movies.com/' },
         { name: 'Hexa', url: 'https://api.hexa.watch' },
