@@ -6,169 +6,213 @@ import Series from '@/types/Series';
 import MediaType from '@/types/MediaType';
 import MediaShort from '@/types/MediaShort';
 
+interface Source {
+  name: string;
+  url: string;
+}
+
+interface SpecialSourceMap {
+  [key: string]: string;
+}
+
+const SOURCES: Source[] = [
+  { name: 'Braflix', url: 'https://api.braflix.win/embed' },
+  { name: 'Vidlink', url: 'https://vidlink.pro/' },
+  { name: 'Multi', url: 'https://vidsrc.dev/embed' },
+  { name: 'Viaplay', url: 'https://www.rgshows.me/player/movies/api2/index.html' },
+  { name: 'Vidplay', url: 'https://vidsrc.cc/v2/embed' },
+  { name: 'Pro', url: 'https://vidsrc.pro/embed/' },
+  { name: 'Vidsrc', url: 'https://vidsrc.io/embed' },
+  { name: '2embed', url: 'https://www.2embed.stream/embed/' },
+  { name: 'Kex', url: 'https://moviekex.online/embed/' },
+  { name: 'VIP', url: 'https://vidsrc.vip/embed/' },
+  { name: 'PrimeWire', url: 'https://www.primewire.tf/embed' },
+  { name: 'LimeWire', url: 'https://vidjoy.pro/embed' },
+  { name: 'Club', url: 'https://moviesapi.club/' },
+  { name: '111Movies', url: 'https://111movies.com/' },
+  { name: 'Hexa', url: 'https://api.hexa.watch' },
+  { name: 'Hindi HD', url: 'https://api.vidsrc.win/hindi.html' },
+  { name: 'Autoembed', url: 'https://player.autoembed.cc/embed' },
+  { name: 'India I', url: 'https://api.vidsrc.win/saysu.html' },
+  { name: 'India II', url: 'https://api.vidsrc.win/embed.html' },
+  { name: 'India III', url: 'https://api.vidsrc.win/api.html' },
+  { name: 'Brazil', url: 'https://embed.warezcdn.com' },
+  { name: 'Super', url: 'https://api.vidsrc.win/super.html' },
+  { name: 'Flixy', url: 'https://flicky.host/embed' }
+];
+
+const SPECIAL_SERIES_SOURCES: SpecialSourceMap = {
+  'India I': 'https://api.vidsrc.win/saysutv.html',
+  'India II': 'https://api.vidsrc.win/embedtv.html',
+  'Viaplay': 'https://rgshows.me/player/series/api2/index.html',
+  'Hindi HD': 'https://api.vidsrc.win/hinditv.html',
+  'Super': 'https://api.vidsrc.win/vidtv.html'
+};
+
+const MAX_VIEWED_ITEMS = 15;
+const LOCAL_STORAGE_KEYS = {
+  selectedSource: 'selectedSource',
+  viewed: 'viewed'
+} as const;
+
 export default function Watch() {
   const nav = useNavigate();
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>();
   const [search] = useSearchParams();
   const [type, setType] = useState<MediaType>('movie');
   const [season, setSeason] = useState(1);
   const [episode, setEpisode] = useState(1);
   const [maxEpisodes, setMaxEpisodes] = useState(1);
   const [data, setData] = useState<Movie | Series>();
+  const [source, setSource] = useState<string>(() => 
+    localStorage.getItem(LOCAL_STORAGE_KEYS.selectedSource) || SOURCES[0].name
+  );
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
-  const sources = [
-    { name: 'Braflix', url: 'https://api.braflix.win/embed' },
-    { name: 'Vidlink', url: 'https://vidlink.pro/' },
-    { name: 'Multi', url: 'https://vidsrc.dev/embed' },
-    { name: 'Viaplay', url: 'https://www.rgshows.me/player/movies/api2/index.html' },
-    { name: 'Vidplay', url: 'https://vidsrc.cc/v2/embed' },
-    { name: 'Pro', url: 'https://vidsrc.pro/embed/' }, 
-    { name: 'Vidsrc', url: 'https://vidsrc.io/embed' },
-    { name: '2embed', url: 'https://www.2embed.stream/embed/' },
-      { name: 'Kex', url: 'https://moviekex.online/embed/' },
-      { name: 'VIP', url: 'https://vidsrc.vip/embed/' },
-    { name: 'PrimeWire', url: 'https://www.primewire.tf/embed' },
-    { name: 'LimeWire', url: 'https://vidjoy.pro/embed' },
-    { name: 'Club', url: 'https://moviesapi.club/' },
-      { name: '111Movies', url: 'https://111movies.com/' },
-        { name: 'Hexa', url: 'https://api.hexa.watch' },
-    { name: 'Hindi HD', url: 'https://api.vidsrc.win/hindi.html' },
-    { name: 'Autoembed', url: 'https://player.autoembed.cc/embed' },
-    { name: 'India I', url: 'https://api.vidsrc.win/saysu.html' },
-    { name: 'India II', url: 'https://api.vidsrc.win/embed.html' },
-    { name: 'India III', url: 'https://api.vidsrc.win/api.html' },
-    { name: 'Brazil', url: 'https://embed.warezcdn.com' },
-    { name: 'Super', url: 'https://api.vidsrc.win/super.html' },
-    { name: 'Flixy', url: 'https://flicky.host/embed' }
-  ];
-
-  const specialSeriesSourcesMap: { [key: string]: string } = {
-    'India I': 'https://api.vidsrc.win/saysutv.html',
-    'India II': 'https://api.vidsrc.win/embedtv.html',
-    'Viaplay': 'https://rgshows.me/player/series/api2/index.html',
-    'Hindi HD': 'https://api.vidsrc.win/hinditv.html',
-    'Super': 'https://api.vidsrc.win/vidtv.html'
+  const addViewed = (mediaData: MediaShort): void => {
+    const viewed: MediaShort[] = JSON.parse(
+      localStorage.getItem(LOCAL_STORAGE_KEYS.viewed) || '[]'
+    );
+    
+    const updatedViewed = [
+      mediaData,
+      ...viewed.filter(v => !(v.id === mediaData.id && v.type === mediaData.type))
+    ].slice(0, MAX_VIEWED_ITEMS);
+    
+    localStorage.setItem(LOCAL_STORAGE_KEYS.viewed, JSON.stringify(updatedViewed));
   };
 
-  const [source, setSource] = useState<string>(
-    localStorage.getItem('selectedSource') || sources[0].name
-  );
+  const getSourceUrl = (): string => {
+    const sourceData = SOURCES.find(s => s.name === source);
+    if (!sourceData) return '';
 
-  useEffect(() => {
-    if (!localStorage.getItem('selectedSource')) {
-      setSource(sources[0].name);
-    }
-  }, []);
+    const { url: baseSource } = sourceData;
+    const isSpecialSource = SPECIAL_SERIES_SOURCES[source];
 
-  function addViewed(data: MediaShort) {
-    let viewed: MediaShort[] = [];
-    const storage = localStorage.getItem('viewed');
-    if (storage) {
-      viewed = JSON.parse(storage);
-    }
-    const index = viewed.findIndex(v => v.id === data.id && v.type === data.type);
-    if (index !== -1) {
-      viewed.splice(index, 1);
-    }
-    viewed.unshift(data);
-    viewed = viewed.slice(0, 15);
-    localStorage.setItem('viewed', JSON.stringify(viewed));
-  }
-
-  function getSource() {
-    const baseSource = sources.find(s => s.name === source)?.url;
-    if (!baseSource) return '';
-
-    let url;
     if (type === 'movie') {
-      if (source === 'Brazil') {
-        url = `${baseSource}/filme/${id}`;
-      } else if (source === 'PrimeWire') {
-        url = `${baseSource}/movie?tmdb=${id}`;
-      } else if (source === 'Multi') {
-        url = `https://vidsrc.dev/embed/movie/${id}`;
-      } else if (source === 'Flixy') {
-        url = `${baseSource}/movie/?id=${id}`;
-      } else if (specialSeriesSourcesMap[source]) {
-        url = `${baseSource}?id=${id}`;
-      } else if (source === 'India III') {
-        url = `${baseSource}?id=${id}`;
-      } else {
-        url = `${baseSource}/movie/${id}`;
-      }
-    } else if (type === 'series') {
-      if (source === 'Brazil') {
+      return constructMovieUrl(baseSource);
+    }
+    return constructSeriesUrl(baseSource, isSpecialSource);
+  };
+
+  const constructMovieUrl = (baseSource: string): string => {
+    switch (source) {
+      case 'Brazil':
+        return `${baseSource}/filme/${id}`;
+      case 'PrimeWire':
+        return `${baseSource}/movie?tmdb=${id}`;
+      case 'Multi':
+        return `https://vidsrc.dev/embed/movie/${id}`;
+      case 'Flixy':
+        return `${baseSource}/movie/?id=${id}`;
+      default:
+        return SPECIAL_SERIES_SOURCES[source] || source === 'India III'
+          ? `${baseSource}?id=${id}`
+          : `${baseSource}/movie/${id}`;
+    }
+  };
+
+  const constructSeriesUrl = (baseSource: string, isSpecialSource: string): string => {
+    let url: string;
+
+    switch (source) {
+      case 'Brazil':
         url = `${baseSource}/serie/${id}/${season}/${episode}`;
-      } else if (source === 'PrimeWire') {
+        break;
+      case 'PrimeWire':
         url = `${baseSource}/tv?tmdb=${id}&season=${season}&episode=${episode}`;
-      } else if (source === 'Multi') {
+        break;
+      case 'Multi':
         url = `https://vidsrc.dev/embed/tv/${id}/${season}/${episode}`;
-      } else if (source === 'Flixy') {
+        break;
+      case 'Flixy':
         url = `${baseSource}/tv/?id=${id}/${season}/${episode}`;
-      } else if (source === 'Club') {
-        url = `${baseSource}/tv/${id}-${season}-${episode}`; // Fixed Club series format
-      } else if (specialSeriesSourcesMap[source]) {
-        url = `${specialSeriesSourcesMap[source]}?id=${id}&s=${season}&e=${episode}`;
-      } else if (source === 'India III') {
-        url = `${baseSource}?id=${id}&s=${season}&e=${episode}`;
-      } else {
-        url = `${baseSource}/tv/${id}/${season}/${episode}`;
-      }
+        break;
+      case 'Club':
+        url = `${baseSource}/tv/${id}-${season}-${episode}`;
+        break;
+      default:
+        if (isSpecialSource || source === 'India III') {
+          url = `${isSpecialSource || baseSource}?id=${id}&s=${season}&e=${episode}`;
+        } else {
+          url = `${baseSource}/tv/${id}/${season}/${episode}`;
+        }
+        break;
     }
+
+    // Append ?autonext=1 for Braflix TV series
+    if (source === 'Braflix' && type === 'series') {
+      url += url.includes('?') ? '&autonext=1' : '?autonext=1';
+    }
+
     return url;
-  }
+  };
 
-  async function getData(_type: MediaType) {
-    const req = await fetch(`${import.meta.env.VITE_APP_API}/${_type}/${id}`);
-    const res = await req.json();
-    if (!res.success) return;
+  const fetchData = async (mediaType: MediaType): Promise<void> => {
+    try {
+      const response = await fetch(`${import.meta.env.VITE_APP_API}/${mediaType}/${id}`);
+      const result = await response.json();
+      
+      if (!result.success) return;
 
-    const data: Movie | Series = res.data;
-    setData(data);
-    addViewed({
-      id: data.id,
-      poster: data.images.poster,
-      title: data.title,
-      type: _type,
-    });
-  }
-
-  async function getMaxEpisodes(season: number) {
-    const req = await fetch(`${import.meta.env.VITE_APP_API}/episodes/${id}?s=${season}`);
-    const res = await req.json();
-    if (!res.success) {
-      nav('/');
-      return;
+      setData(result.data);
+      addViewed({
+        id: result.data.id,
+        poster: result.data.images.poster,
+        title: result.data.title,
+        type: mediaType,
+      });
+    } catch (error) {
+      console.error('Error fetching media data:', error);
     }
-    setMaxEpisodes(res.data.length);
-  }
+  };
+
+  const fetchMaxEpisodes = async (seasonNumber: number): Promise<void> => {
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_APP_API}/episodes/${id}?s=${seasonNumber}`
+      );
+      const result = await response.json();
+      
+      if (!result.success) {
+        nav('/');
+        return;
+      }
+      
+      setMaxEpisodes(result.data.length);
+    } catch (error) {
+      console.error('Error fetching episode data:', error);
+      nav('/');
+    }
+  };
 
   useEffect(() => {
-    if (!data) return;
-    if (!('seasons' in data)) return;
+    if (!data || !('seasons' in data)) return;
     if (season > data.seasons || episode > maxEpisodes) {
       nav('/');
     }
-  }, [data, maxEpisodes]);
+  }, [data, maxEpisodes, season, episode, nav]);
 
   useEffect(() => {
     const s = search.get('s');
     const e = search.get('e');
     const me = search.get('me');
+
     if (!s || !e) {
       setType('movie');
-      getData('movie');
+      fetchData('movie');
       return;
     }
-    setSeason(parseInt(s));
-    setEpisode(parseInt(e));
+
+    setSeason(Number(s));
+    setEpisode(Number(e));
     setType('series');
-    getData('series');
+    fetchData('series');
+
     if (me) {
-      setMaxEpisodes(parseInt(me));
+      setMaxEpisodes(Number(me));
     } else {
-      getMaxEpisodes(parseInt(s));
+      fetchMaxEpisodes(Number(s));
     }
   }, [id, search]);
 
@@ -180,7 +224,7 @@ export default function Watch() {
   }, []);
 
   useEffect(() => {
-    localStorage.setItem('selectedSource', source);
+    localStorage.setItem(LOCAL_STORAGE_KEYS.selectedSource, source);
   }, [source]);
 
   return (
@@ -196,23 +240,21 @@ export default function Watch() {
           <i
             className="fa-regular fa-arrow-left"
             onClick={() => nav(`/${type}/${id}`)}
-          ></i>
+          />
           {type === 'series' && episode < maxEpisodes && (
             <i
               className="fa-regular fa-forward-step right"
               onClick={() =>
-                nav(
-                  `/watch/${id}?s=${season}&e=${episode + 1}&me=${maxEpisodes}`
-                )
+                nav(`/watch/${id}?s=${season}&e=${episode + 1}&me=${maxEpisodes}`)
               }
-            ></i>
+            />
           )}
           <select
             value={source}
             onChange={(e) => setSource(e.target.value)}
           >
-            {sources.map((s, index) => (
-              <option key={index} value={s.name}>
+            {SOURCES.map((s) => (
+              <option key={s.name} value={s.name}>
                 {s.name}
               </option>
             ))}
@@ -220,7 +262,7 @@ export default function Watch() {
         </div>
         <iframe
           ref={iframeRef}
-          src={getSource()}
+          src={getSourceUrl()}
           width="100%"
           height="100%"
           allowFullScreen
