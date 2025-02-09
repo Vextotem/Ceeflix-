@@ -18,6 +18,7 @@ interface SpecialSourceMap {
 const SOURCES: Source[] = [
   { name: 'Braflix', url: 'https://api.braflix.win/embed' },
     { name: '4K', url: 'https://player.videasy.net/' },
+      { name: 'Vidlink', url: 'https://vidlink.pro/' },
   { name: 'Multi', url: 'https://vidsrc.dev/embed' },
   { name: 'Viaplay', url: 'https://www.rgshows.me/player/movies/api2/index.html' },
   { name: 'Vidplay', url: 'https://vidsrc.cc/v2/embed' },
