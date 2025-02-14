@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useRef, useState } from 'react';
 import { Link, NavLink, useNavigate, useSearchParams } from 'react-router-dom';
 
@@ -14,13 +13,11 @@ export default function Nav() {
 
   function onScroll() {
     const scrolled = window.scrollY > 0;
-
     setScrolled(scrolled);
   }
 
   function onSearchClick(e: React.MouseEvent<HTMLDivElement, MouseEvent>) {
     e.preventDefault();
-
     setSearching(true);
   }
 
@@ -46,9 +43,7 @@ export default function Nav() {
 
   useEffect(() => {
     if (searchParams.has('q')) setSearch(searchParams.get('q')!);
-
     window.addEventListener('scroll', onScroll);
-
     return () => {
       window.removeEventListener('scroll', onScroll);
     };
@@ -84,6 +79,7 @@ export default function Nav() {
         <NavLink to="/movies">Movies</NavLink>
         <NavLink to="/series">Series</NavLink>
         <NavLink to="/list">My List</NavLink>
+        <a href="https://t.me/hdoboxapk2" target="_blank" rel="noopener noreferrer">Join Telegram</a>
 
         <NavLink className="mobile" to="/movies">
           <i className="fa-solid fa-film"></i>
@@ -96,13 +92,16 @@ export default function Nav() {
         <NavLink className="mobile" to="/list">
           <i className="fa-solid fa-list"></i>
         </NavLink>
+
+        <a href="https://t.me/HdoBoxApk2" className='mobile' target="_blank" rel="noopener noreferrer">
+          <i className="fa-brands fa-telegram"></i>
+        </a>
       </div>
 
       <div className="top-bar-search" ref={wrapperRef}>
         {searching ? (
           <div className="top-bar-input">
             <i className="fa-solid fa-search"></i>
-
             <input
               type="text"
               ref={inputRef}
