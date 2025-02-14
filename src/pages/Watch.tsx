@@ -116,44 +116,50 @@ export default function Watch() {
   };
 
   const constructSeriesUrl = (baseSource: string, isSpecialSource: string): string => {
-    let url: string;
+  let url: string;
 
-    switch (source) {
-      case 'Brazil':
-        url = `${baseSource}/serie/${id}/${season}/${episode}`;
-        break;
-      case 'PrimeWire':
-        url = `${baseSource}/tv?tmdb=${id}&season=${season}&episode=${episode}`;
-        break;
-      case 'Multi':
-        url = `https://vidsrc.dev/embed/tv/${id}/${season}/${episode}`;
-        break;
-      case 'Flixy':
-        url = `${baseSource}/tv/?id=${id}/${season}/${episode}`;
-        break;
-      case 'Club':
-        url = `${baseSource}/tv/${id}-${season}-${episode}`;
-        break;
-      case '4K':
+  switch (source) {
+    case 'Brazil':
+      url = `${baseSource}/serie/${id}/${season}/${episode}`;
+      break;
+    case 'PrimeWire':
+      url = `${baseSource}/tv?tmdb=${id}&season=${season}&episode=${episode}`;
+      break;
+    case 'Multi':
+      url = `https://vidsrc.dev/embed/tv/${id}/${season}/${episode}`;
+      break;
+    case 'Flixy':
+      url = `${baseSource}/tv/?id=${id}/${season}/${episode}`;
+      break;
+    case 'Club':
+      url = `${baseSource}/tv/${id}-${season}-${episode}`;
+      break;
+    case '4K':
+      url = `${baseSource}/tv/${id}/${season}/${episode}`;
+      url += url.includes('?') ? `&${SERIES_URL_PARAMS}` : `?${SERIES_URL_PARAMS}`;
+      break;
+    case 'Vidlink': // Fixing Vidlink TV URL
+      url = `${baseSource}/tv/${id}/${season}/${episode}`;
+      url += url.includes('?') 
+        ? `&primaryColor=63b8bc&secondaryColor=a2a2a2&iconColor=eefdec&icons=default&player=default&title=true&poster=true&autoplay=true&nextbutton=true`
+        : `?primaryColor=63b8bc&secondaryColor=a2a2a2&iconColor=eefdec&icons=default&player=default&title=true&poster=true&autoplay=true&nextbutton=true`;
+      break;
+    default:
+      if (isSpecialSource || source === 'India III') {
+        url = `${isSpecialSource || baseSource}?id=${id}&s=${season}&e=${episode}`;
+      } else {
         url = `${baseSource}/tv/${id}/${season}/${episode}`;
-        url += url.includes('?') ? `&${SERIES_URL_PARAMS}` : `?${SERIES_URL_PARAMS}`;
-        break;
-      default:
-        if (isSpecialSource || source === 'India III') {
-          url = `${isSpecialSource || baseSource}?id=${id}&s=${season}&e=${episode}`;
-        } else {
-          url = `${baseSource}/tv/${id}/${season}/${episode}`;
-        }
-        break;
-    }
+      }
+      break;
+  }
 
-    // Append ?autonext=1 for Braflix TV series
-    if (source === 'Braflix' && type === 'series') {
-      url += url.includes('?') ? '&autonext=1' : '?autonext=1';
-    }
+  // Append ?autonext=1 for Braflix TV series
+  if (source === 'Braflix' && type === 'series') {
+    url += url.includes('?') ? '&autonext=1' : '?autonext=1';
+  }
 
-    return url;
-  };
+  return url;
+};
 
   const fetchData = async (mediaType: MediaType): Promise<void> => {
     try {
