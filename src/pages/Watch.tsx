@@ -15,10 +15,12 @@ interface SpecialSourceMap {
   [key: string]: string;
 }
 
+const SERIES_URL_PARAMS = 'nextEpisode=true&autoplayNextEpisode=true&episodeSelector=true&color=#E50914';
+
 const SOURCES: Source[] = [
   { name: 'Braflix', url: 'https://api.braflix.win/embed' },
-    { name: '4K', url: 'https://player.videasy.net/' },
-      { name: 'Vidlink', url: 'https://vidlink.pro/' },
+  { name: '4K', url: 'https://player.videasy.net/' },
+  { name: 'Vidlink', url: 'https://vidlink.pro/' },
   { name: 'Multi', url: 'https://vidsrc.dev/embed' },
   { name: 'Viaplay', url: 'https://www.rgshows.me/player/movies/api2/index.html' },
   { name: 'Vidplay', url: 'https://vidsrc.cc/v2/embed' },
@@ -131,6 +133,10 @@ export default function Watch() {
         break;
       case 'Club':
         url = `${baseSource}/tv/${id}-${season}-${episode}`;
+        break;
+      case '4K':
+        url = `${baseSource}/tv/${id}/${season}/${episode}`;
+        url += url.includes('?') ? `&${SERIES_URL_PARAMS}` : `?${SERIES_URL_PARAMS}`;
         break;
       default:
         if (isSpecialSource || source === 'India III') {
