@@ -19,9 +19,11 @@ const SERIES_URL_PARAMS = 'nextEpisode=true&autoplayNextEpisode=true&episodeSele
 
 const SOURCES: Source[] = [
   { name: 'Braflix', url: 'https://api.braflix.win/embed' },
-  { name: '4K', url: 'https://player.videasy.net/' },
+  { name: '4K', url: 'https://player.videasy.net' },
   { name: 'Vidlink', url: 'https://vidlink.pro/' },
-  { name: 'Multi', url: 'https://vidsrc.dev/embed' },
+  { name: 'Nero', url: 'https://vidfast.pro/' },  
+  { name: 'Nexa', url: 'https://6x3d4pm9r7k2v8h1q5.uira.live/embed' },
+  { name: 'Multi', url: 'https://vidsrc.dev/embed' },  
   { name: 'Viaplay', url: 'https://www.rgshows.me/player/movies/api2/index.html' },
   { name: 'Vidplay', url: 'https://vidsrc.cc/v2/embed' },
   { name: 'Pro', url: 'https://vidsrc.pro/embed/' },
@@ -153,9 +155,9 @@ export default function Watch() {
       break;
   }
 
-  // Append ?autonext=1 for Braflix TV series
+  // Append ?autonext=1&ds_lang=en for Braflix TV series
   if (source === 'Braflix' && type === 'series') {
-    url += url.includes('?') ? '&autonext=1' : '?autonext=1';
+    url += url.includes('?') ? '&autonext=1&ds_lang=en' : '?autonext=1&ds_lang=en';
   }
 
   return url;
