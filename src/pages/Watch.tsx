@@ -22,7 +22,6 @@ const SOURCES: Source[] = [
   { name: '4K', url: 'https://player.videasy.net' },
   { name: 'Vidlink', url: 'https://vidlink.pro/' },
   { name: 'Nero', url: 'https://vidfast.pro/' },  
-  { name: 'Nexa', url: 'https://6x3d4pm9r7k2v8h1q5.uira.live/embed' },
   { name: 'Multi', url: 'https://vidsrc.dev/embed' },  
   { name: 'Vidplay', url: 'https://vidsrc.cc/v2/embed' },
   { name: 'Pro', url: 'https://vidsrc.pro/embed/' },
@@ -105,7 +104,7 @@ export default function Watch() {
         return `${baseSource}/movie?tmdb=${id}`;
       case 'Multi':
         return `https://vidsrc.dev/embed/movie/${id}`;
-      case 'Flixy':
+      case 'flix':
         return `${baseSource}/movie/?id=${id}`;
       default:
         return SPECIAL_SERIES_SOURCES[source] || source === 'India III'
@@ -127,7 +126,7 @@ export default function Watch() {
     case 'Multi':
       url = `https://vidsrc.dev/embed/tv/${id}/${season}/${episode}`;
       break;
-    case 'Flixy':
+    case 'flix':
       url = `${baseSource}/tv/?id=${id}/${season}/${episode}`;
       break;
     case 'Club':
