@@ -24,15 +24,13 @@ const SOURCES: Source[] = [
   { name: 'Nero', url: 'https://vidfast.pro/' },  
   { name: 'Nexa', url: 'https://6x3d4pm9r7k2v8h1q5.uira.live/embed' },
   { name: 'Multi', url: 'https://vidsrc.dev/embed' },  
-  { name: 'Viaplay', url: 'https://www.rgshows.me/player/movies/api2/index.html' },
   { name: 'Vidplay', url: 'https://vidsrc.cc/v2/embed' },
   { name: 'Pro', url: 'https://vidsrc.pro/embed/' },
   { name: 'Vidsrc', url: 'https://vidsrc.io/embed' },
   { name: '2embed', url: 'https://www.2embed.stream/embed/' },
   { name: 'Kex', url: 'https://moviekex.online/embed/' },
-  { name: 'VIP', url: 'https://vidsrc.vip/embed/' },
+  { name: 'Slime', url: 'https://vidsrc.vip/embed/' },
   { name: 'PrimeWire', url: 'https://www.primewire.tf/embed' },
-  { name: 'LimeWire', url: 'https://vidjoy.pro/embed' },
   { name: 'Club', url: 'https://moviesapi.club/' },
   { name: '111Movies', url: 'https://111movies.com/' },
   { name: 'Hexa', url: 'https://api.hexa.watch' },
@@ -43,13 +41,12 @@ const SOURCES: Source[] = [
   { name: 'India III', url: 'https://api.vidsrc.win/api.html' },
   { name: 'Brazil', url: 'https://embed.warezcdn.com' },
   { name: 'Super', url: 'https://api.vidsrc.win/super.html' },
-  { name: 'Flixy', url: 'https://flicky.host/embed' }
+  { name: 'Flix', url: 'https://flicky.host/embed' }
 ];
 
 const SPECIAL_SERIES_SOURCES: SpecialSourceMap = {
   'India I': 'https://api.vidsrc.win/saysutv.html',
   'India II': 'https://api.vidsrc.win/embedtv.html',
-  'Viaplay': 'https://rgshows.me/player/series/api2/index.html',
   'Hindi HD': 'https://api.vidsrc.win/hinditv.html',
   'Super': 'https://api.vidsrc.win/vidtv.html'
 };
