@@ -97,8 +97,6 @@ export default function Watch() {
         return `${baseSource}/movie?tmdb=${id}`;
       case 'Multi':
         return `https://vidsrc.dev/embed/movie/${id}`;
-      case 'Flix':
-        return `${baseSource}/movie/?id=${id}`;
       default:
         return SPECIAL_SERIES_SOURCES[source] || source === 'India III'
           ? `${baseSource}?id=${id}`
@@ -118,9 +116,6 @@ export default function Watch() {
         break;
       case 'Multi':
         url = `https://vidsrc.dev/embed/tv/${id}/${season}/${episode}`;
-        break;
-      case 'Flix': // Flix URL pattern fix
-        url = `${baseSource}/tv/?id=${id}/${season}/${episode}`;
         break;
       case 'Club':
         url = `${baseSource}/tv/${id}-${season}-${episode}`;
