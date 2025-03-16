@@ -31,22 +31,15 @@ const SOURCES: Source[] = [
   { name: 'Slime', url: 'https://vidsrc.vip/embed/' },
   { name: 'PrimeWire', url: 'https://www.primewire.tf/embed' },
   { name: 'Club', url: 'https://moviesapi.club/' },
-  { name: '111Movies', url: 'https://111movies.com/' },
-  { name: 'Hexa', url: 'https://api.hexa.watch' },
-  { name: 'Hindi HD', url: 'https://api.vidsrc.win/hindi.html' },
+  { name: 'Sage', url: 'https://111movies.com/' },
   { name: 'Autoembed', url: 'https://player.autoembed.cc/embed' },
-  { name: 'India I', url: 'https://api.vidsrc.win/saysu.html' },
-  { name: 'India II', url: 'https://api.vidsrc.win/embed.html' },
-  { name: 'India III', url: 'https://api.vidsrc.win/api.html' },
+  { name: 'India 420p', url: 'https://api.vidsrc.win/api.html' },
   { name: 'Brazil', url: 'https://embed.warezcdn.com' },
   { name: 'Super', url: 'https://api.vidsrc.win/super.html' },
-  { name: 'Flix', url: 'https://6x3d4pm9r7k2v8h1q56.uira.live/embed' }
+  { name: 'Flix', url: 'https://vidsrc.su/embed' }
 ];
 
 const SPECIAL_SERIES_SOURCES: SpecialSourceMap = {
-  'India I': 'https://api.vidsrc.win/saysutv.html',
-  'India II': 'https://api.vidsrc.win/embedtv.html',
-  'Hindi HD': 'https://api.vidsrc.win/hinditv.html',
   'Super': 'https://api.vidsrc.win/vidtv.html'
 };
 
@@ -107,7 +100,7 @@ export default function Watch() {
       case 'Flix':
         return `${baseSource}/movie/?id=${id}`;
       default:
-        return SPECIAL_SERIES_SOURCES[source] || source === 'India III'
+        return SPECIAL_SERIES_SOURCES[source] || source === 'India 420p'
           ? `${baseSource}?id=${id}`
           : `${baseSource}/movie/${id}`;
     }
@@ -143,7 +136,7 @@ export default function Watch() {
         : `?primaryColor=63b8bc&secondaryColor=a2a2a2&iconColor=eefdec&icons=default&player=default&title=true&poster=true&autoplay=true&nextbutton=true`;
       break;
     default:
-      if (isSpecialSource || source === 'India III') {
+      if (isSpecialSource || source === 'India 420p') {
         url = `${isSpecialSource || baseSource}?id=${id}&s=${season}&e=${episode}`;
       } else {
         url = `${baseSource}/tv/${id}/${season}/${episode}`;
