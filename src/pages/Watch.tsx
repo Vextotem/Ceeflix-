@@ -36,7 +36,7 @@ const SOURCES: Source[] = [
   { name: 'Autoembed', url: 'https://player.autoembed.cc/embed' },
   { name: 'India 420p', url: 'https://api.vidsrc.win/api.html' },
   { name: 'Brazil', url: 'https://embed.warezcdn.com' },
-  { name: 'Flix', url: 'https://vidsrc.su/embed' }
+  { name: 'Flix', url: 'https://vidsrc.rip/embed' }
 ];
 
 const SPECIAL_SERIES_SOURCES: SpecialSourceMap = {
