@@ -15,6 +15,7 @@ interface SpecialSourceMap {
   [key: string]: string;
 }
 
+
 const SERIES_URL_PARAMS = 'nextEpisode=true&autoplayNextEpisode=true&episodeSelector=true&color=#E50914';
 
 const SOURCES: Source[] = [
@@ -42,7 +43,6 @@ const SPECIAL_SERIES_SOURCES: SpecialSourceMap = {
   'India 420p': 'https://api.vidsrc.win/api.html',
   'Slime': 'https://vidsrc.vip/emb/tv'
 };
-
 const MAX_VIEWED_ITEMS = 15;
 const LOCAL_STORAGE_KEYS = {
   selectedSource: 'selectedSource',
@@ -100,7 +100,7 @@ export default function Watch() {
       case 'Flix':
         return `${baseSource}/movie/?id=${id}`;
       default:
-        return SPECIAL_SERIES_SOURCES[source] || source === 'India 420p'
+        return SPECIAL_SERIES_SOURCES[source] || source === 'India III'
           ? `${baseSource}?id=${id}`
           : `${baseSource}/movie/${id}`;
     }
@@ -119,7 +119,7 @@ export default function Watch() {
       case 'Multi':
         url = `https://vidsrc.dev/embed/tv/${id}/${season}/${episode}`;
         break;
-      case 'Flix':
+      case 'Flix': // Flix URL pattern fix
         url = `${baseSource}/tv/?id=${id}/${season}/${episode}`;
         break;
       case 'Club':
@@ -136,7 +136,7 @@ export default function Watch() {
           : `?primaryColor=63b8bc&secondaryColor=a2a2a2&iconColor=eefdec&icons=default&player=default&title=true&poster=true&autoplay=true&nextbutton=true`;
         break;
       default:
-        if (isSpecialSource || source === 'India 420p') {
+        if (isSpecialSource || source === 'India III') {
           url = `${isSpecialSource || baseSource}?id=${id}&s=${season}&e=${episode}`;
         } else {
           url = `${baseSource}/tv/${id}/${season}/${episode}`;
