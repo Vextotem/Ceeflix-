@@ -39,7 +39,9 @@ const SOURCES: Source[] = [
 ];
 
 const SPECIAL_SERIES_SOURCES: SpecialSourceMap = {
-  
+  'India 420p': 'https://api.vidsrc.win/api.html',
+  'Slime': 'https://vidsrc.vip/emb/tv'
+};
 
 const MAX_VIEWED_ITEMS = 15;
 const LOCAL_STORAGE_KEYS = {
@@ -105,50 +107,50 @@ export default function Watch() {
   };
 
   const constructSeriesUrl = (baseSource: string, isSpecialSource: string): string => {
-  let url: string;
+    let url: string;
 
-  switch (source) {
-    case 'Brazil':
-      url = `${baseSource}/serie/${id}/${season}/${episode}`;
-      break;
-    case 'PrimeWire':
-      url = `${baseSource}/tv?tmdb=${id}&season=${season}&episode=${episode}`;
-      break;
-    case 'Multi':
-      url = `https://vidsrc.dev/embed/tv/${id}/${season}/${episode}`;
-      break;
-    case 'lix':
-      url = `${baseSource}/tv/?id=${id}/${season}/${episode}`;
-      break;
-    case 'Club':
-      url = `${baseSource}/tv/${id}-${season}-${episode}`;
-      break;
-    case '4K':
-      url = `${baseSource}/tv/${id}/${season}/${episode}`;
-      url += url.includes('?') ? `&${SERIES_URL_PARAMS}` : `?${SERIES_URL_PARAMS}`;
-      break;
-    case 'Vidlink': // Fixing Vidlink TV URL
-      url = `${baseSource}/tv/${id}/${season}/${episode}`;
-      url += url.includes('?') 
-        ? `&primaryColor=63b8bc&secondaryColor=a2a2a2&iconColor=eefdec&icons=default&player=default&title=true&poster=true&autoplay=true&nextbutton=true`
-        : `?primaryColor=63b8bc&secondaryColor=a2a2a2&iconColor=eefdec&icons=default&player=default&title=true&poster=true&autoplay=true&nextbutton=true`;
-      break;
-    default:
-      if (isSpecialSource || source === 'India 420p') {
-        url = `${isSpecialSource || baseSource}?id=${id}&s=${season}&e=${episode}`;
-      } else {
+    switch (source) {
+      case 'Brazil':
+        url = `${baseSource}/serie/${id}/${season}/${episode}`;
+        break;
+      case 'PrimeWire':
+        url = `${baseSource}/tv?tmdb=${id}&season=${season}&episode=${episode}`;
+        break;
+      case 'Multi':
+        url = `https://vidsrc.dev/embed/tv/${id}/${season}/${episode}`;
+        break;
+      case 'Flix':
+        url = `${baseSource}/tv/?id=${id}/${season}/${episode}`;
+        break;
+      case 'Club':
+        url = `${baseSource}/tv/${id}-${season}-${episode}`;
+        break;
+      case '4K':
         url = `${baseSource}/tv/${id}/${season}/${episode}`;
-      }
-      break;
-  }
+        url += url.includes('?') ? `&${SERIES_URL_PARAMS}` : `?${SERIES_URL_PARAMS}`;
+        break;
+      case 'Vidlink': // Fixing Vidlink TV URL
+        url = `${baseSource}/tv/${id}/${season}/${episode}`;
+        url += url.includes('?') 
+          ? `&primaryColor=63b8bc&secondaryColor=a2a2a2&iconColor=eefdec&icons=default&player=default&title=true&poster=true&autoplay=true&nextbutton=true`
+          : `?primaryColor=63b8bc&secondaryColor=a2a2a2&iconColor=eefdec&icons=default&player=default&title=true&poster=true&autoplay=true&nextbutton=true`;
+        break;
+      default:
+        if (isSpecialSource || source === 'India 420p') {
+          url = `${isSpecialSource || baseSource}?id=${id}&s=${season}&e=${episode}`;
+        } else {
+          url = `${baseSource}/tv/${id}/${season}/${episode}`;
+        }
+        break;
+    }
 
-  // Append ?autonext=1&ds_lang=en for Braflix TV series
-  if (source === 'Braflix' && type === 'series') {
-    url += url.includes('?') ? '&autonext=1&ds_lang=en' : '?autonext=1&ds_lang=en';
-  }
+    // Append ?autonext=1&ds_lang=en for Braflix TV series
+    if (source === 'Braflix' && type === 'series') {
+      url += url.includes('?') ? '&autonext=1&ds_lang=en' : '?autonext=1&ds_lang=en';
+    }
 
-  return url;
-};
+    return url;
+  };
 
   const fetchData = async (mediaType: MediaType): Promise<void> => {
     try {
