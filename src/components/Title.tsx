@@ -22,6 +22,8 @@ interface TitleProps {
 export default function Title({ type, id }: TitleProps) {
   const nav = useNavigate();
   const ref = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLIFrameElement>(null);
+  const videoContainerRef = useRef<HTMLDivElement>(null);
 
   const [data, setData] = useState<Movie | Series>();
   const [season, setSeason] = useState(1);
@@ -32,6 +34,12 @@ export default function Title({ type, id }: TitleProps) {
   const [wished, setWished] = useState(false);
   const [extendSuggestions, setExtendSuggestions] = useState(false);
   const [extendEpisodes, setExtendEpisodes] = useState(false);
+  
+  // New states for video/trailer functionality
+  const [trailerUrl, setTrailerUrl] = useState<string | null>(null);
+  const [videoVisible, setVideoVisible] = useState(false);
+  const [videoLoaded, setVideoLoaded] = useState(false);
+  const [isMuted, setIsMuted] = useState(false);
 
   function getYear(date: string) {
     const timestamp = Date.parse(date);
@@ -49,6 +57,13 @@ export default function Title({ type, id }: TitleProps) {
     return `${hours}h ${minutes}m`;
   }
 
+  function getDownloadUrl_2() {
+    let url = type === 'movie'
+      ? `${import.meta.env.VITE_MOIVE_DOWNLOAD_2}?id=${id}`
+      : `${import.meta.env.VITE_MOIVE_DOWNLOAD_1}?id=${id}&s=${season}&e=${episode}`;
+    return url;
+  }
+
   async function getData() {
     const req = await fetch(import.meta.env.VITE_APP_API + '/' + type + '/' + id);
     const res = await req.json();
@@ -61,6 +76,11 @@ export default function Title({ type, id }: TitleProps) {
     const data = res.data;
 
     setData(data);
+    
+    // Mock setting trailer URL - in a real app you'd get this from the API
+    if (data.trailer) {
+      setTrailerUrl(data.trailer);
+    }
 
     if (type !== 'series') return;
 
@@ -127,6 +147,38 @@ export default function Title({ type, id }: TitleProps) {
       nav('/');
     }
   }
+  
+  // New video-related functions
+  function handlePlayVideo() {
+    if (!trailerUrl) return;
+    setVideoVisible(true);
+  }
+  
+  function toggleMute() {
+    setIsMuted(!isMuted);
+    if (videoRef.current) {
+      const iframe = videoRef.current;
+      const url = new URL(iframe.src);
+      
+      if (isMuted) {
+        url.searchParams.delete('mute');
+      } else {
+        url.searchParams.set('mute', '1');
+      }
+      
+      iframe.src = url.toString();
+    }
+  }
+  
+  function toggleFullScreen() {
+    if (!videoContainerRef.current) return;
+    
+    if (document.fullscreenElement) {
+      document.exitFullscreen();
+    } else {
+      videoContainerRef.current.requestFullscreen();
+    }
+  }
 
   useEffect(() => {
     document.body.style.overflow = 'hidden';
@@ -151,6 +203,8 @@ export default function Title({ type, id }: TitleProps) {
 
     setData(undefined);
     setEpisodes(undefined);
+    setVideoVisible(false);
+    setVideoLoaded(false);
 
     setExtendEpisodes(false);
     setExtendSuggestions(false);
@@ -197,34 +251,135 @@ export default function Title({ type, id }: TitleProps) {
           <div className="title-close" onClick={() => nav('/')}>
             <i className="fa-light fa-close"></i>
           </div>
-
-          <div
-            className="title-backdrop"
-            style={{
-              backgroundImage: `url(${data.images.backdrop})`
+          
+          <div 
+            className="title-backdrop" 
+            style={{ 
+              position: 'relative',
+              backgroundImage: `url(${data.images.backdrop})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              minHeight: '40vh',
+              overflow: 'hidden',
+              cursor: trailerUrl && !videoVisible ? 'pointer' : 'default'
             }}
-          ></div>
+            onClick={trailerUrl && !videoVisible ? handlePlayVideo : undefined}
+          >
+            {trailerUrl && !videoVisible && (
+              <div 
+                className="play-button-overlay"
+                style={{
+                  position: 'absolute',
+                  top: '50%',
+                  left: '50%',
+                  transform: 'translate(-50%, -50%)',
+                  background: 'rgba(0,0,0,0.5)',
+                  borderRadius: '50%',
+                  width: '80px',
+                  height: '80px',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  zIndex: 2
+                }}
+              >
+                <i 
+                  className="fa-solid fa-play" 
+                  style={{
+                    color: 'white',
+                    fontSize: '32px'
+                  }}
+                ></i>
+              </div>
+            )}
+            
+            {trailerUrl && (
+              <div 
+                ref={videoContainerRef}
+                className="trailer-container" 
+                style={{ 
+                  width: '100%', 
+                  height: '100%', 
+                  position: 'absolute', 
+                  top: 0, 
+                  left: 0,
+                  display: videoVisible ? 'block' : 'none',
+                  zIndex: 3
+                }}
+              >
+                <iframe
+                  src={videoVisible ? trailerUrl : 'about:blank'}
+                  ref={videoRef}
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+                  allowFullScreen
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    backgroundColor: '#000',
+                    transition: 'opacity 0.5s ease',
+                    opacity: videoLoaded ? 1 : 0
+                  }}
+                  onLoad={() => {
+                    setTimeout(() => setVideoLoaded(true), 500);
+                  }}
+                ></iframe>
+              </div>
+            )}
+          </div>
 
           <div className="title-content">
             <div className="title-logo">
               <img alt={data.title} src={data.images.logo} />
             </div>
 
+            <div className="left-side-buttons" style={{ display: videoVisible ? 'flex' : 'none' }}>
+              {trailerUrl && (
+                <>
+                  <button className="button" onClick={toggleMute} style={{ zIndex: 10 }}>
+                    <i className={`fa-solid ${isMuted ? 'fa-volume-mute' : 'fa-volume-up'}`}></i>
+                  </button>
+
+                  <button className="button btn" onClick={toggleFullScreen} style={{ zIndex: 10 }}>
+                    <i className="fa-solid fa-expand"></i>
+                  </button>
+                </>
+              )}
+            </div>
+
             <div className="title-actions">
-              <Link className="button" to={`/watch/${id}${type === 'series' ? `?s=${season}&e=${episode}` : ''}`}>
+              <Link 
+                className="button" 
+                to={`/watch/${id}${type === 'series' ? `?s=${season}&e=${episode}` : ''}`}
+                style={{ touchAction: 'manipulation' }}
+              >
                 <i className="fa-solid fa-play"></i>
                 <span>{type === 'series' ? `S${season} E${episode}` : 'Play'}</span>
               </Link>
 
               {wished ? (
-                <button className="button" onClick={onCheckClick}>
+                <button className="button" onClick={onCheckClick} style={{ touchAction: 'manipulation' }}>
                   <i className="fa-solid fa-check"></i>
                 </button>
               ) : (
-                <button className="button secondary" onClick={onPlusClick}>
+                <button className="button secondary" onClick={onPlusClick} style={{ touchAction: 'manipulation' }}>
                   <i className="fa-solid fa-plus"></i>
                 </button>
               )}
+              <div className="button2">
+                <a 
+                  href={getDownloadUrl_2()} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  style={{ touchAction: 'manipulation' }}
+                >
+                  <i className="fa-solid fa-download"></i>
+                  <span>{type === 'series' ? `S${season} E${episode}` : 'Download'}</span>
+                </a>
+              </div>
             </div>
 
             <div className="title-grid">
@@ -290,7 +445,7 @@ export default function Title({ type, id }: TitleProps) {
               </div>
             )}
 
-            {data.suggested.length > 0 && (
+            {data.suggested && data.suggested.length > 0 && (
               <div className="title-section">
                 <h3>More Like This</h3>
 
