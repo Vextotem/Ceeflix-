@@ -24,6 +24,7 @@ export default function Title({ type, id }: TitleProps) {
   const ref = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLIFrameElement>(null);
   const videoContainerRef = useRef<HTMLDivElement>(null);
+  const trailerModalRef = useRef<HTMLDivElement>(null);
 
   const [data, setData] = useState<Movie | Series>();
   const [season, setSeason] = useState(1);
@@ -35,11 +36,14 @@ export default function Title({ type, id }: TitleProps) {
   const [extendSuggestions, setExtendSuggestions] = useState(false);
   const [extendEpisodes, setExtendEpisodes] = useState(false);
   
-  // New states for video/trailer functionality
+  // Video/trailer functionality
   const [trailerUrl, setTrailerUrl] = useState<string | null>(null);
   const [videoVisible, setVideoVisible] = useState(false);
   const [videoLoaded, setVideoLoaded] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
+  
+  // New trailer modal state
+  const [trailerModalVisible, setTrailerModalVisible] = useState(false);
 
   function getYear(date: string) {
     const timestamp = Date.parse(date);
@@ -77,7 +81,7 @@ export default function Title({ type, id }: TitleProps) {
 
     setData(data);
     
-    // Mock setting trailer URL - in a real app you'd get this from the API
+    // Set trailer URL from API response or construct it
     if (data.trailer) {
       setTrailerUrl(data.trailer);
     }
@@ -148,7 +152,7 @@ export default function Title({ type, id }: TitleProps) {
     }
   }
   
-  // New video-related functions
+  // Video-related functions
   function handlePlayVideo() {
     if (!trailerUrl) return;
     setVideoVisible(true);
@@ -179,6 +183,31 @@ export default function Title({ type, id }: TitleProps) {
       videoContainerRef.current.requestFullscreen();
     }
   }
+  
+  // Functions for trailer modal
+  function openTrailerModal() {
+    setTrailerModalVisible(true);
+    document.body.style.overflow = 'hidden';
+  }
+  
+  function closeTrailerModal() {
+    setTrailerModalVisible(false);
+    document.body.style.overflow = 'auto';
+  }
+  
+  // Close modal if clicking outside
+  function handleTrailerModalClick(e: React.MouseEvent) {
+    if (trailerModalRef.current && e.target === trailerModalRef.current) {
+      closeTrailerModal();
+    }
+  }
+
+  // Get the correct trailer URL based on content type
+  function getTrailerUrl() {
+    return type === 'movie' 
+      ? `${import.meta.env.VITE_AWS_API}/trailers.html?id=${id}`
+      : `${import.meta.env.VITE_AWS_API}/tvshow.html?id=${id}`;
+  }
 
   useEffect(() => {
     document.body.style.overflow = 'hidden';
@@ -205,6 +234,7 @@ export default function Title({ type, id }: TitleProps) {
     setEpisodes(undefined);
     setVideoVisible(false);
     setVideoLoaded(false);
+    setTrailerModalVisible(false);
 
     setExtendEpisodes(false);
     setExtendSuggestions(false);
@@ -227,10 +257,10 @@ export default function Title({ type, id }: TitleProps) {
       setWished(Wishlist.has(data.id, type as MediaType));
     }
 
-    Wishlist.on(data.id, type, onWishlistChange);
+    Wishlist.on(data.id, type as MediaType, onWishlistChange);
 
     return () => {
-      Wishlist.off(data.id, type, onWishlistChange);
+      Wishlist.off(data.id, type as MediaType, onWishlistChange);
     };
   }, [data]);
 
@@ -381,6 +411,29 @@ export default function Title({ type, id }: TitleProps) {
                 </a>
               </div>
             </div>
+            
+            {/* Trailer Button */}
+            <button 
+              className="button" 
+              onClick={openTrailerModal}
+              style={{ 
+                width: '100%',
+                marginTop: '10px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: '12px',
+                borderRadius: '4px',
+                backgroundColor: '#333',
+                color: 'white',
+                border: 'none',
+                cursor: 'pointer',
+                transition: 'background-color 0.3s',
+              }}
+            >
+              <i className="fa-solid fa-film" style={{ marginRight: '10px' }}></i>
+              <span>Watch Trailer</span>
+            </button>
 
             <div className="title-grid">
               <div className="title-col">
@@ -417,7 +470,7 @@ export default function Title({ type, id }: TitleProps) {
                 <div className="title-row">
                   <h3>Episodes</h3>
 
-                  <select className="title-select" defaultValue={season} onChange={onSeasonChange}>
+                  <select className="title-select" value={season} onChange={onSeasonChange}>
                     {Array.from({ length: data.seasons }).map((_, i) => (
                       <option key={i} value={i + 1}>
                         Season {i + 1}
@@ -469,6 +522,69 @@ export default function Title({ type, id }: TitleProps) {
           </div>
         </div>
       </div>
+      
+      {/* Trailer Modal */}
+      {trailerModalVisible && (
+        <div 
+          ref={trailerModalRef}
+          className="trailer-modal"
+          onClick={handleTrailerModalClick}
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            backgroundColor: 'rgba(0,0,0,0.9)',
+            zIndex: 1000,
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center'
+          }}
+        >
+          <div 
+            className="trailer-modal-content"
+            style={{
+              width: '90%',
+              maxWidth: '900px',
+              position: 'relative',
+              aspectRatio: '16/9',
+              backgroundColor: '#000'
+            }}
+          >
+            <button 
+              className="close-modal"
+              onClick={closeTrailerModal}
+              style={{
+                position: 'absolute',
+                top: '-40px',
+                right: '0',
+                backgroundColor: 'transparent',
+                border: 'none',
+                color: 'white',
+                fontSize: '24px',
+                cursor: 'pointer',
+                zIndex: 1001
+              }}
+            >
+              <i className="fa-light fa-close"></i>
+            </button>
+            
+            <iframe
+              src={getTrailerUrl()}
+              frameBorder="0"
+              allowFullScreen
+              style={{
+                width: '100%',
+                height: '100%',
+                position: 'absolute',
+                top: 0,
+                left: 0
+              }}
+            ></iframe>
+          </div>
+        </div>
+      )}
     </>
   );
 }
