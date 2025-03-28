@@ -19,8 +19,8 @@ interface SpecialSourceMap {
 const SERIES_URL_PARAMS = 'nextEpisode=true&autoplayNextEpisode=true&episodeSelector=true&color=#E50914';
 
 const SOURCES: Source[] = [
+  { name: '4K', url: 'https://wrapurl.pages.dev/redirect.html?fw=https%3A%2F%2Fclapper-3ar.pages.dev%2Fplayer.html%3Fsrc%3Dhttps%3A%2F%2Fplayer.videasy.net' },
   { name: 'Braflix', url: 'https://api.braflix.win/embed' },
-  { name: '4K', url: 'https://player.videasy.net' },
   { name: 'Vidlink', url: 'https://vidlink.pro/' },
   { name: 'Nero', url: 'https://vidfast.pro/' },  
   { name: 'Multi', url: 'https://vidsrc.dev/embed' },  
